@@ -35,15 +35,10 @@
                                 <div class="col-12">
                                     <label for="firstName" class="form-label">First Name <span
                                             class="text-danger">*</span></label>
-                                    <input type="email" class="form-control" name="firstName" id="firstName"
+                                    <input type="text" class="form-control" name="firstName" id="firstName"
                                         placeholder="First Name" required>
                                 </div>
-                                <div class="col-12">
-                                    <label for="lastName" class="form-label">Last Name <span
-                                            class="text-danger">*</span></label>
-                                    <input type="email" class="form-control" name="lastName" id="lastName"
-                                        placeholder="Last Name" required>
-                                </div>
+                                
                                 <div class="col-12">
                                     <label for="email" class="form-label">Email <span
                                             class="text-danger">*</span></label>
@@ -57,32 +52,38 @@
                                         required>
                                 </div>
                                 <div class="col-12">
+                                    <label for="lastName" class="form-label">Phone<span
+                                            class="text-danger">*</span></label>
+                                    <input type="tel" class="form-control" name="phone" id="phone"
+                                        placeholder="Phone" required>
+                                </div>
+                                <div class="col-12">
                                     <label for="inputAddress" class="form-label">Address <span
                                             class="text-danger">*</span></label>
                                     <input type="email" class="form-control" name="address" id="inputAddress"
-                                        placeholder="Address" required>
+                                        placeholder="Address (Area and Street)" required>
                                 </div>
                                 <div class="col-12">
                                         <label for="inputCity">City <span
                                             class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="inputCity" required>
                                     </div>
-                                <div class="row">
+                                {{!-- <div class="row"> --}}
                                     
-                                    <div class="col-8">
+                                    {{!-- <div class="col-8">
                                         <label for="inputState">State <span
                                             class="text-danger">*</span></label>
                                         <select id="inputState" class="form-control">
                                             <option selected>Choose...</option>
                                             <option>...</option>
                                         </select>
-                                    </div>
+                                    </div> --}}
                                     <div class=" col-4">
                                         <label for="inputZip">Zip <span
                                             class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="inputZip" required>
                                     </div>
-                                </div>
+                                {{!-- </div> --}}
                                 <div class="col-12">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value="" name="iAgree"
