@@ -6,6 +6,7 @@ var logger = require('morgan');
 var session = require('express-session')
 var exphbs = require('express-handlebars')
 var dotenv = require('dotenv').config()
+var connect = require('./config/mongoConnect')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
