@@ -1,3 +1,2 @@
 node_modules
-port
-DATABASE_URL
+.env

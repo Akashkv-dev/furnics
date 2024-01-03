@@ -9,6 +9,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/login',loginpage);
+
 router.get('/signup',signpage);
 
 
