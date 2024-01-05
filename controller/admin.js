@@ -25,5 +25,14 @@ module.exports = {
 
     dashboard:(req,res)=>{
         res.render('admin/admin')
+    },
+    addproducts:
+        (req,res)=>{
+            res.render('admin/addproducts')
+        
+    },
+    adminlogout:(req,res)=>{
+        res.redirect('/')
+        console.log("logout");
     }
 }
