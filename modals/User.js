@@ -4,7 +4,8 @@ const userSchema=new mongoose.Schema({
 
     name:{
         type:String,
-        required:true
+        required:true,
+        minlength:4
     },
     email:{
         type:String,
@@ -31,6 +32,10 @@ const userSchema=new mongoose.Schema({
     zip:{
         type:Number,
         required:true
+    },
+    role:{
+        type:String,
+        default:'user'
     }
 
 

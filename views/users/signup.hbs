@@ -30,12 +30,12 @@
                                 </div>
                             </div>
                         </div>
-                        <form action="#!">
+                        <form action="/users/signedIn" method="post">
                             <div class="row gy-3 gy-md-4 overflow-hidden">
                                 <div class="col-12">
                                     <label for="firstName" class="form-label">First Name <span
                                             class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="firstName" id="firstName"
+                                    <input type="text" class="form-control" name="name" id="firstName"
                                         placeholder="First Name" required>
                                 </div>
                                 
@@ -60,30 +60,20 @@
                                 <div class="col-12">
                                     <label for="inputAddress" class="form-label">Address <span
                                             class="text-danger">*</span></label>
-                                    <input type="email" class="form-control" name="address" id="inputAddress"
+                                    <input type="text" class="form-control" name="address" id="inputAddress"
                                         placeholder="Address (Area and Street)" required>
                                 </div>
                                 <div class="col-12">
                                         <label for="inputCity">City <span
                                             class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="inputCity" required>
+                                        <input type="text" class="form-control" name="city" id="inputCity" required>
                                     </div>
-                                {{!-- <div class="row"> --}}
-                                    
-                                    {{!-- <div class="col-8">
-                                        <label for="inputState">State <span
-                                            class="text-danger">*</span></label>
-                                        <select id="inputState" class="form-control">
-                                            <option selected>Choose...</option>
-                                            <option>...</option>
-                                        </select>
-                                    </div> --}}
+                                
                                     <div class=" col-4">
                                         <label for="inputZip">Zip <span
                                             class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="inputZip" required>
+                                        <input type="text" class="form-control" name="zip" id="inputZip" required>
                                     </div>
-                                {{!-- </div> --}}
                                 <div class="col-12">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value="" name="iAgree"

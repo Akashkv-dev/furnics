@@ -28,11 +28,6 @@ const hbs = exphbs.create({
 app.engine('hbs', hbs.engine);
 app.set('view engine', 'hbs');
 
-// *************multer storage********************
-
-
-
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -40,6 +35,16 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/users',express.static(path.join(__dirname, 'public')));
 app.use('/admin', express.static(path.join(__dirname, 'public')));
+
+// ****************session*******************
+
+app.use(session({
+  secret:'rahasyam',
+  resave:false,
+  proxy:true,
+  saveUninitialized:true,
+  cookie:{ maxAge: 1000 * 60 * 60 * 24}
+}))
 
 
 app.use('/', indexRouter);
