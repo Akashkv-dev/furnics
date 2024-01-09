@@ -1,6 +1,11 @@
+const product=require('../modals/Products')
+
 module.exports={
-    homepage:(req, res, next)=> {
-        res.render('users/index', { title: 'Furnics' })
+    homepage: async (req, res)=> {
+
+      const prodata = await product.find({}).lean()
+console.log(prodata);
+        res.render('users/index', { prodata })
       }
 
 }

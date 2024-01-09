@@ -170,26 +170,30 @@
             </a>
           </div>
         </div>
+        {{#each prodata}}
         <div class="row">
+          
           <div id="featured-swiper" class="product-swiper col-md-12">
             <div class="swiper">
               <div class="swiper-wrapper">
                 <div class="swiper-slide">
                   <div class="product-card image-zoom-effect link-effect d-flex flex-wrap">
+                    
                     <div class="image-holder">
-                      <img src="images/product-item1.jpg" alt="product-item" class="product-image img-fluid">
+                      <img src="../uploads/{{this.image}}" alt="product-item" class="product-image img-fluid">
                     </div>
                     <div class="cart-concern">
                       <h3 class="card-title text-uppercase pt-3 text-primary">
-                        <a href="single-product.html" class="text-primary">Black Sofa Set</a>
+                        <a href="single-product.html" class="text-primary">{{this.productname}}</a>
                       </h3>
                       <div class="cart-info">
-                        <a class="pseudo-text-effect" href="#" data-after="ADD TO CART"><span>$200</span></a>
+                        <a class="pseudo-text-effect" href="#" data-after="ADD TO CART"><span>${{this.price}}</span></a>
                       </div>
                     </div>
+                    
                   </div>
                 </div>
-                <div class="swiper-slide">
+                {{!-- <div class="swiper-slide">
                   <div class="product-card image-zoom-effect link-effect d-flex flex-wrap">
                     <div class="image-holder">
                       <img src="images/product-item2.jpg" alt="product-item" class="product-image img-fluid">
@@ -273,12 +277,14 @@
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> --}}
               </div>
             </div>
             <div class="swiper-pagination text-center mt-5"></div>
           </div>
+          
         </div>
+        {{/each}}
       </div>      
     </section>
 
