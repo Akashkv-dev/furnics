@@ -21,18 +21,18 @@ const userSchema=new mongoose.Schema({
         type:String,
         required:true
     },
-    address:{
-        type:String,
-        required:true
-    },
-    city:{
-        type:String,
-        required:true
-    },
-    zip:{
-        type:Number,
-        required:true
-    },
+    // address:{
+    //     type:String,
+    //     required:true
+    // },
+    // city:{
+    //     type:String,
+    //     required:true
+    // },
+    // zip:{
+    //     type:Number,
+    //     required:true
+    // },
     role:{
         type:String,
         default:'user'

@@ -1,5 +1,5 @@
 var express = require('express');
-const { loginpage,signpage,signUp } = require('../controller/user');
+const { loginpage,userAuth,signpage,signUp } = require('../controller/user');
 // const { render } = require('../app');
 var router = express.Router();
 
@@ -9,8 +9,10 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/login',loginpage);
+router.post('/signin',userAuth)
 router.get('/signup',signpage);
 router.post('/signedIn',signUp)
+
 
 
 module.exports = router;

@@ -128,9 +128,13 @@
                                     </li>
                                 </ul>
                             </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="dropdownPages"
-                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pages</a>
+                            {{#if passwordMatch}}
+                                <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle pe-3" href="#" id="dropdownPages"
+                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <svg class="user" width="18" height="18">
+                                                    <use xlink:href="#user"></use>
+                                                </svg>Furnics</a>
                                 <ul class="dropdown-menu list-unstyled" aria-labelledby="dropdownPages">
                                     <li>
                                         <a href="about-us.html" class="dropdown-item item-anchor">About <span
@@ -178,6 +182,19 @@
                                     </li>
                                 </ul>
                             </li>
+                            
+                            {{else}}
+                            <li class="pe-3">
+                                            <a href="users/login">
+                                                <svg class="user" width="18" height="18">
+                                                    <use xlink:href="#user"></use>
+                                                </svg>
+                                                Login
+                                            </a>
+                            </li>
+                            {{/if}}
+                                        
+
                             <li class="nav-item">
                                 <div class="user-items ps-5">
                                     <ul class="d-flex justify-content-end list-unstyled">
@@ -189,14 +206,7 @@
                                             </svg>
                                         </li>
                                         
-                                        <li class="pe-3">
-                                            <a href="users/login">
-                                                <svg class="user" width="18" height="18">
-                                                    <use xlink:href="#user"></use>
-                                                </svg>
-                                                Login
-                                            </a>
-                                        </li>
+                                        
                                         <li>
                                             <a href="cart.html">
                                                 <svg class="cart" width="18" height="18">
