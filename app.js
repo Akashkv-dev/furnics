@@ -39,7 +39,7 @@ app.use('/admin', express.static(path.join(__dirname, 'public')));
 // ****************session*******************
 
 app.use(session({
-  secret:'rahasyam',
+  secret:process.env.SESSION_SECRET,
   resave:false,
   proxy:true,
   saveUninitialized:true,
