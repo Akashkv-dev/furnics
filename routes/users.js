@@ -1,5 +1,5 @@
 var express = require('express');
-const { loginpage,userAuth,signpage,signUp } = require('../controller/user');
+const { loginpage,userAuth,signpage,signUp,logout } = require('../controller/user');
 // const { render } = require('../app');
 var router = express.Router();
 
@@ -12,6 +12,7 @@ router.get('/login',loginpage);
 router.post('/signin',userAuth)
 router.get('/signup',signpage);
 router.post('/signedIn',signUp)
+router.get('/logout',logout)
 
 
 

@@ -128,7 +128,8 @@
                                     </li>
                                 </ul>
                             </li>
-                            {{#if passwordMatch}}
+                            
+                            {{#if isUser}}
                                 <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle pe-3" href="#" id="dropdownPages"
                                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -173,13 +174,13 @@
                                                 class="badge bg-secondary text-dark ms-2">PRO</span></a>
                                     </li>
                                     <li>
-                                        <a href="single-post.html" class="dropdown-item item-anchor">Single Post <span
+                                        <a href="/users/logout" class="dropdown-item item-anchor">Logout <span
                                                 class="badge bg-secondary text-dark ms-2">PRO</span></a>
                                     </li>
-                                    <li>
+                                    {{!-- <li>
                                         <a href="single-product.html" class="dropdown-item item-anchor">Single Product
                                             <span class="badge bg-secondary text-dark ms-2">PRO</span></a>
-                                    </li>
+                                    </li> --}}
                                 </ul>
                             </li>
                             
