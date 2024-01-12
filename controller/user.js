@@ -1,9 +1,10 @@
-const User=require('../modals/User')
+
 const adminkey = process.env.ADMINKEY
 const adminpw = process.env.ADMINPW
 const bcrypt = require('bcrypt')
 
 const users = require('../helpers/userHelper')
+const Products=require('../helpers/productHelper')
 
 module.exports={
     loginpage:(req,res)=>{
@@ -38,7 +39,7 @@ module.exports={
             else{
                 
                 res.render('users/login',{invalid:"invalid password"})
-            }
+            }  
 
         }     
     },
@@ -50,7 +51,8 @@ module.exports={
         res.render('users/signup')
     },
     signUp:async function(req,res){
-        console.log(req.body);
+        try {
+            console.log(req.body);
       const details={
         name:req.body.name,
         email:req.body.email,
@@ -59,10 +61,22 @@ module.exports={
         }
         const hashpassword=await bcrypt.hash(req.body.password,10)
         details.password=hashpassword
-        await User.insertMany(details)
+        await users.insertData(details)
+        res.redirect('/login')
+            
+        } catch (error) {
+            console.log('existing user',error);
+            res.render('users/signup',{invalid:"existing user"})
+            
+        }
+        
     },
     logout:(req,res)=>{
         req.session.destroy()
         res.redirect('/')
+    },
+    allproducts:async (req,res)=>{
+       const prodata =await Products.allproducts()
+        res.render('users/allproducts',{prodata})
     }
 } 
