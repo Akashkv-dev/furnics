@@ -1,10 +1,10 @@
-{{> userheader}}
-
+{{!-- {{> userheader}}
+{{#each prodata}}
 <section id="featured-products" class="product-store position-relative padding-large">
     <div class="container-fluid">
 
         <div class="row">
-            {{#each prodata}}
+
 
             <div id="featured-swiper" class="product-swiper col-md-12">
                 <div class="swiper">
@@ -36,7 +36,68 @@
                 </div>
                 <div class="swiper-pagination text-center mt-5"></div>
             </div>
-            {{/each}}
+
         </div>
     </div>
-</section>
+</section> --}}
+
+
+
+{{!-- {{> userheader}}
+
+<section id="featured-products" class="product-store position-relative padding-large">
+    <div class="container-fluid">
+        <div class="row">
+            <div id="featured-swiper" class="product-swiper col-md-12">
+                <div class="swiper">
+                    <div class="swiper-wrapper">
+                        {{#each prodata}}
+                        <div class=" col-md-3 ms-2">
+                            <div class="product-card image-zoom-effect link-effect d-flex flex-wrap">
+                                <div class="image-holder">
+                                    <img src="../uploads/{{this.image}}" alt="product-item"
+                                        class="product-image img-fluid" style="width: 100%; height: auto;">
+                                </div>
+                                <div class="cart-concern">
+                                    <h3 class="card-title text-uppercase pt-3 text-primary">
+                                        <a href="single-product.html" class="text-primary">{{this.productname}}</a>
+                                    </h3>
+                                    <div class="cart-info">
+                                        <a class="pseudo-text-effect" href="#"
+                                            data-after="ADD TO CART"><span>${{this.price}}</span></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+                <div class="swiper-pagination text-center mt-5"></div>
+            </div>
+        </div>
+    </div>
+</section> --}}
+
+{{> userheader}}
+
+<div class="row">
+    {{#each prodata}}
+    <div class="col-md-3">
+        <div class="product-card image-zoom-effect link-effect d-flex flex-wrap">
+            <!-- Your card content here -->
+            <div class="image-holder">
+                <img src="../uploads/{{this.image}}" alt="product-item" class="product-image img-fluid"
+                    style="width: 100%; height: auto;">
+            </div>
+            <div class="cart-concern">
+                <h3 class="card-title text-uppercase pt-3 text-primary">
+                    <a href="single-product.html" class="text-primary">{{this.productname}}</a>
+                </h3>
+                <div class="cart-info">
+                    <a class="pseudo-text-effect" href="#" data-after="ADD TO CART"><span>${{this.price}}</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+</div>
