@@ -77,6 +77,7 @@ module.exports={
     },
     allproducts:async (req,res)=>{
        const prodata =await Products.allproducts()
-        res.render('users/allproducts',{prodata})
+       const isUser =req.session.loggedIn
+        res.render('users/allproducts',{prodata,isUser})
     }
 } 

@@ -1,5 +1,7 @@
 var express = require('express');
 const { loginpage,userAuth,signpage,signUp,logout,allproducts } = require('../controller/user');
+const isAuth =require('../middleware/isAuth')
+
 // const { render } = require('../app');
 var router = express.Router();
 
@@ -13,7 +15,7 @@ router.post('/signin',userAuth)
 router.get('/signup',signpage);
 router.post('/signedIn',signUp)
 router.get('/logout',logout)
-router.get('/addproducts',allproducts);
+router.get('/addproducts',isAuth,allproducts);
 
 
 
