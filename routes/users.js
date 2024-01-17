@@ -11,7 +11,7 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
-router.get('/login',noCache,loginpage);
+router.get('/login',loginpage);
 router.post('/signin',userAuth)
 router.get('/signup',signpage);
 router.post('/signedIn',signUp)

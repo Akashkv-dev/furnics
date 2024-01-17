@@ -9,7 +9,13 @@ const { request } = require('express')
 
 module.exports = {
     loginpage: (req, res) => {
-        res.render('users/login')
+        if(req.session.loggedIn){
+            res.redirect('/')
+        }
+        else{
+            res.render('users/login')
+        }
+        
     },
     userAuth: async (req, res) => {
 
@@ -44,10 +50,7 @@ module.exports = {
 
         }
     },
-    loggedIn: (res, req) => {
-
-
-    },
+    
     signpage: (req, res) => {
         res.render('users/signup')
     },
