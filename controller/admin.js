@@ -17,9 +17,6 @@ module.exports = {
         res.redirect('/')
         console.log("logout");
     },
-
-
-    
     productAdded: async function(req,res){
 
         

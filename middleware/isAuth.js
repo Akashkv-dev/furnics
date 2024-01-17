@@ -1,9 +1,9 @@
 const isAuth = function (req,res,next){
-    if(req.session.loggedIn){
+    if(req.session.userId){
         next();
     }
     else{
-        res.redirect('/')
+        res.render('users/login')
     }    
 }
 module.exports = isAuth;

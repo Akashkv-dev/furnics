@@ -8,6 +8,8 @@ const exphbs = require('express-handlebars')
 const dotenv = require('dotenv').config()
 const connect = require('./config/mongoConnect')
 const multer = require('multer')
+const MongoDBStore= require('connect-mongodb-session')(session)
+
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -36,6 +38,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/users',express.static(path.join(__dirname, 'public')));
 app.use('/admin', express.static(path.join(__dirname, 'public')));
 
+
+
 // ****************session*******************
 
 app.use(session({
@@ -43,7 +47,9 @@ app.use(session({
   resave:false,
   proxy:true,
   saveUninitialized:true,
-  cookie:{ maxAge: 1000 * 60 * 60 * 24}
+  cookie:{ maxAge: 1000 * 60 * 60 * 24},
+  store: new MongoDBStore({mongooseConnection:connect})
+  
 }))
 
 

@@ -37,9 +37,21 @@ const userSchema=new mongoose.Schema({
     role:{
         type:String,
         default:'user'
-    }
+    },
+    cart:[
+        {
+            productId:{
+                type: mongoose.Schema.Types.ObjectId,
+                ref:'products'
+            },
+            quantity:{
+                type:Number,
+                required:true
+            }
 
-
+        }
+    ]
+        
 })
 
 const User = mongoose.model('users',userSchema)
