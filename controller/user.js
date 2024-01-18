@@ -92,8 +92,13 @@ module.exports = {
             console.log(userid);
 
         const cartProduct = await userH.findProduct(userid)
+        const cartItems=cartProduct.cart || [];
+        const sum = cartItems.reduce((sum, item) => sum + item.productId.price,0)     
+        const totalSum =sum + 5
 
-        res.render('users/cart', { cartItem:cartProduct.cart})
+        console.log(totalSum);
+
+        res.render('users/cart', { cartItems,sum,totalSum})
          
             
         } catch (error) {
