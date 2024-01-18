@@ -68,12 +68,12 @@
                       <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
 
                         <button class="btn btn-outline quantity-btn" data-action="decrease"
-                          data-product-id="{{this.productId}}">-</button>
+                          data-product-id="{{this.productId._id}}">-</button>
 
-                        <button class="btn quantity" id="quantity_{{this.productId}}">{{this.quantity}}</button>
+                        <button class="btn quantity" id="quantity_{{this.productId._id}}">{{this.quantity}}</button>
 
                         <button class="btn btn-outline quantity-btn" data-action="increase"
-                          data-product-id="{{this.productId}}">+</button>
+                          data-product-id="{{this.productId._id}}">+</button>
 
                       </div>
                       <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
@@ -207,32 +207,41 @@
     </div>
   </section>
 
-  {{!-- <script>
+  <script>
   $(document).ready(function () {
     // Event listener for quantity buttons
     $('.quantity-btn').on('click', function () {
       const productId = $(this).data('product-id');
       const action = $(this).data('action');
+      console.log(productId, action)
       
       // AJAX request to update quantity on the server
       $.ajax({
-        url: '/api/cart/update',
+        url: '/users/cart/update',
         method: 'POST',
         data: {
           productId: productId,
           action: action
         },
         success: function (response) {
-          // Update the quantity in the UI
-          const quantityElement = $(`#quantity_${productId}`);
-          quantityElement.text(response.quantity);
-        },
+    console.log('Response from server:', response);
+
+    // Check if the response is a valid number
+    if (!isNaN(response)) {
+      // Update the quantity in the UI
+      const quantityElement = $(`#quantity_${productId}`);
+      quantityElement.text(response);
+      console.log('Cart quantity updated successfully');
+    } else {
+      console.error('Invalid response from server');
+    }
+  },
         error: function (error) {
           console.error('Error updating cart:', error);
         }
       });
     });
   });
-</script> --}}
+</script>
 
 </body>

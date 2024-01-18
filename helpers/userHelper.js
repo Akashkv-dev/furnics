@@ -36,12 +36,50 @@ module.exports = {
         return result;
 
     },
-    findProduct: async (data) => { 
-        var result = await User.findOne({ _id: data }).populate({path:'cart.productId',model:'products'}).lean()
+    findProduct: async (data) => {
+        var result = await User.findOne({ _id: data }).populate({ path: 'cart.productId', model: 'products' }).lean()
         console.log('found product');
         console.log(result.cart[0].productId);
 
         return result
+    },
+    updateCartInc: async (userid, productId) => {
+        const user = await User.findOneAndUpdate(
+            { _id: userid, 'cart.productId': productId },
+            { $inc: { 'cart.$.quantity': 1 } },
+            { new: true })
+
+            console.log(user);
+
+        const foundProduct = user.cart.find(item => item.productId.toString() === productId);
+
+        if (foundProduct) {
+            const updatedQuantity = foundProduct.quantity;
+            console.log(updatedQuantity);
+            console.log('Cart quantity incremented successfully');
+
+            return updatedQuantity;
+        }
+
+
+    },
+    updateCartDec:async (userid,productId)=>{
+       const user = await User.findOneAndUpdate(
+            { _id: userid, 'cart.productId': productId, 'cart.quantity':{$gt:1} },
+            { $inc: { 'cart.$.quantity': -1 } },
+            { new: true })
+
+            const foundProduct = user.cart.find(item => item.productId.toString() === productId);
+
+            if (foundProduct) {
+                const updatedQuantity = foundProduct.quantity;
+                console.log(updatedQuantity);
+                console.log('Cart quantity decremented successfully');
+    
+                return updatedQuantity;
+            }
+
+
     }
 
 

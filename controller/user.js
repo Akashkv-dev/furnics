@@ -127,6 +127,36 @@ module.exports = {
             console.error(error)
             res.status(500).send('Internal Server Error');
         }
+    },
+    quantityUpdate: async (req,res)=>{
+        const userid = req.session.userId;
+        const cartProduct = await userH.findProduct(userid)
+        const cart= cartProduct.cart
+  
+
+        const { productId, action }=req.body;
+        console.log(productId,action);
+        console.log(req.body);
+        try {
+            if(action =='increase'){
+                const quantity= await userH.updateCartInc(userid,productId)
+                console.log(quantity);
+                 res.json(quantity)
+             } else{
+                 if(action =='decrease'  ){
+                     const quantity=await userH.updateCartDec(userid,productId)
+                     console.log(quantity);
+                     res.json(quantity)
+                 }
+                 
+             }
+            //  && cart.quantity >1
+        } catch (error) {
+            
+            console.error('inc/dec issue', error);
+        }
+        
+        
     }
 
 } 
