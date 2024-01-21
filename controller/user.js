@@ -93,7 +93,7 @@ module.exports = {
 
         const cartProduct = await userH.findProduct(userid)
         const cartItems=cartProduct.cart || [];
-        const sum = cartItems.reduce((sum, item) => sum + item.productId.price,0)     
+        const sum = cartItems.reduce((sum, item) => sum + (item.quantity * item.productId.price),0)     
         const totalSum =sum + 5
 
         console.log(totalSum);
@@ -132,25 +132,38 @@ module.exports = {
         const userid = req.session.userId;
         const cartProduct = await userH.findProduct(userid)
         const cart= cartProduct.cart
-  
-
+        let updatedprice
+        
         const { productId, action }=req.body;
         console.log(productId,action);
         console.log(req.body);
         try {
             if(action =='increase'){
-                const quantity= await userH.updateCartInc(userid,productId)
-                console.log(quantity);
-                 res.json(quantity)
+                const updatedquantity= await userH.updateCartInc(userid,productId)
+                cartProduct.cart.find(item => {
+                    updatedprice =item.productId.price * updatedquantity
+                   
+                    })
+               console.log(updatedprice);
+
+                console.log(updatedquantity);
+                 res.json({quantity:updatedquantity,price:updatedprice})
+                 
              } else{
-                 if(action =='decrease'  ){
-                     const quantity=await userH.updateCartDec(userid,productId)
-                     console.log(quantity);
-                     res.json(quantity)
+                 if(action =='decrease' ){
+                     const updatedquantity=await userH.updateCartDec(userid,productId)
+                     cartProduct.cart.find(item => {
+                        updatedprice =item.productId.price * updatedquantity
+                       
+                        })
+                   console.log(updatedprice);
+
+                     console.log(updatedquantity);
+                     res.json({quantity:updatedquantity,price:updatedprice})
                  }
                  
              }
-            //  && cart.quantity >1
+             
         } catch (error) {
             
             console.error('inc/dec issue', error);
