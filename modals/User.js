@@ -48,10 +48,17 @@ const userSchema=new mongoose.Schema({
                 type:Number,
                 required:true,
                 default:1
+            },
+            price:{
+                type:Number,
+                required:true,
+                // default:0
             }
+            
 
         }
     ]
+   
         
 })
 

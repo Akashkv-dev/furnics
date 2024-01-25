@@ -9,13 +9,13 @@ const { request } = require('express')
 
 module.exports = {
     loginpage: (req, res) => {
-        if(req.session.loggedIn){
+        if (req.session.loggedIn) {
             res.redirect('/')
         }
-        else{
+        else {
             res.render('users/login')
         }
-        
+
     },
     userAuth: async (req, res) => {
 
@@ -50,7 +50,7 @@ module.exports = {
 
         }
     },
-    
+
     signpage: (req, res) => {
         res.render('users/signup')
     },
@@ -66,7 +66,7 @@ module.exports = {
             const hashpassword = await bcrypt.hash(req.body.password, 10)
             details.password = hashpassword
             await userH.insertData(details)
-            res.redirect('/login')
+            res.redirect('/users/login')
 
         } catch (error) {
             console.log('existing user', error);
@@ -87,36 +87,52 @@ module.exports = {
         res.render('users/allproducts', { prodata, isUser })
     },
     viewcart: async (req, res) => {
-        try {
-            userid = req.session.userId
-            console.log(userid);
-
+        const userid = req.session.userId
         const cartProduct = await userH.findProduct(userid)
-        const cartItems=cartProduct.cart || [];
-        const sum = cartItems.reduce((sum, item) => sum + (item.quantity * item.productId.price),0)     
-        const totalSum =sum + 5
-
-        console.log(totalSum);
-
-        res.render('users/cart', { cartItems,sum,totalSum})
-         
-            
-        } catch (error) {
-            console.error('product not found',error);
-            
-        }
+        const cartItems = cartProduct.cart || [];
         
+
+        if(cartItems.length>0){
+        try {
+
+            const cartCount = cartItems.length
+            console.log('cartCount', cartCount);
+            
+
+            
+            const sum = cartItems.reduce((sum, item) => sum + (item.quantity * item.productId.price), 0)
+            const totalSum = sum + 5
+
+            console.log(totalSum);
+
+            res.render('users/cart', { cartItems,sum,totalSum,cartCount})
+
+
+        } catch (error) {
+            console.error('product not found', error);
+
+        }
+    }
+    else{
+        res.render('users/cart',{cartItems:[]})
+    }
+
+
     },
     addTocart: async (req, res) => {
         const Productid = req.params.id
         const userid = req.session.userId
+        const Product = await productH.findItem(Productid)
+        const Price = Product.price
+        console.log(Price);
 
 
         try {
             // const selectedItem=await productH.findItem(productid)
             const arrayItems = {
                 productid: Productid,
-                quantity: 1
+                quantity: 1,
+                price:Price
             }
             await userH.pushTOcart(arrayItems, userid)
 
@@ -128,48 +144,116 @@ module.exports = {
             res.status(500).send('Internal Server Error');
         }
     },
-    quantityUpdate: async (req,res)=>{
+    quantityUpdate: async (req, res) => {
         const userid = req.session.userId;
-        const cartProduct = await userH.findProduct(userid)
-        const cart= cartProduct.cart
-        let updatedprice
-        
-        const { productId, action }=req.body;
-        console.log(productId,action);
-        console.log(req.body);
+        var cartProduct = await userH.findProduct(userid)
+        const cart = cartProduct.cart
+        let updatedprice 
+
+        // const cartItems = cartProduct.cart || [];
+        // const sum = cartItems.reduce((sum, item) => sum + (item.quantity * item.productId.price), 0)
+        // const totalSum = sum + 5
+
+        const { productId, action } = req.body;
+        // console.log(productId, action);
+        // console.log(req.body);
         try {
-            if(action =='increase'){
-                const updatedquantity= await userH.updateCartInc(userid,productId)
-                cartProduct.cart.find(item => {
-                    updatedprice =item.productId.price * updatedquantity
-                   
+            if (action == 'increase') {
+                const updatedquantity = await userH.updateCartInc(userid, productId)
+                // updated cart
+                var cartProductF = await userH.findProduct(userid)
+                let sum
+                cartProductF.cart.forEach(item => {
+                    if(item.productId._id==productId){
+                    updatedprice = item.productId.price * updatedquantity
+
+                    userH.updateUserCart(userid, productId, updatedprice)
+                    }
+                    sum += item.productId.price * item.quantity;
+                    // console.log('itemquantity',item.quantity);
+                    
+                })
+                
+                const totalSum = sum + 5;
+
+
+                // console.log('updatedprice',updatedprice);
+                // console.log('sum',sum);
+
+                
+                // console.log('last updated qty',updatedquantity);
+                res.json({ quantity: updatedquantity, price: updatedprice, cartSum: sum, cartTotal: totalSum })
+
+            } else {
+                if (action == 'decrease') {
+                    const updatedquantity = await userH.updateCartDec(userid, productId)
+                    // updated cart
+                    var cartProductF = await userH.findProduct(userid)
+                    let sum=0
+                    
+                    cartProductF.cart.forEach(item => {
+                        if(item.productId._id == productId){
+                        updatedprice = item.productId.price * updatedquantity
+                     
+                        userH.updateUserCart(userid, productId, updatedprice)
+                        }  
+
+                        sum += item.productId.price * item.quantity;
+
                     })
-               console.log(updatedprice);
 
-                console.log(updatedquantity);
-                 res.json({quantity:updatedquantity,price:updatedprice})
-                 
-             } else{
-                 if(action =='decrease' ){
-                     const updatedquantity=await userH.updateCartDec(userid,productId)
-                     cartProduct.cart.find(item => {
-                        updatedprice =item.productId.price * updatedquantity
-                       
-                        })
-                   console.log(updatedprice);
+                    const totalSum = sum + 5;
 
-                     console.log(updatedquantity);
-                     res.json({quantity:updatedquantity,price:updatedprice})
-                 }
-                 
-             }
-             
+
+
+                    // console.log('updatedprice',updatedprice);
+
+                    
+
+                    // console.log('last updated qty',updatedquantity);
+                    res.json({ quantity: updatedquantity, price: updatedprice, cartSum: sum, cartTotal: totalSum })
+                }
+
+            }
+
         } catch (error) {
-            
+
             console.error('inc/dec issue', error);
         }
-        
-        
+
+
+    },
+    cartItemRemove: async (req, res) => {
+        const userid = req.session.userId;
+        const { productId } = req.body;
+        console.log('for removing:',productId)
+        console.log('userid:',userid);
+        let sum=0
+        try {
+           const updatedCart= await userH.removeItem(userid, productId)
+            //   console.log('updatedCartaaaaaa',updatedCart);
+           updatedCart.forEach(item => {
+            
+            sum += item.price * item.quantity;
+            // console.log('sum',sum);
+            
+        })
+        const cartCount = updatedCart.length
+        let totalSum;
+        if(sum==0){
+            totalSum=0
+
+        }
+        else{
+            totalSum = sum + 5;
+        }
+         
+            // Send the response
+            res.json({ success: true, cartSum: sum, cartTotal: totalSum, cartCount: cartCount})
+        } catch (error) {
+            console.error('remove issue', error);
+            res.json({ success: false });
+        }
     }
 
 } 

@@ -21,6 +21,8 @@ module.exports = {
         const user = await User.findOne({ _id: userid })
         const productID = data.productid
         const quantity = data.quantity
+        const price = data.price
+
 
         const existingItemIndex = user.cart.findIndex(
             (cartItem) => cartItem.productId && cartItem.productId.toString() === productID)
@@ -28,7 +30,7 @@ module.exports = {
             user.cart[existingItemIndex].quantity += 1
         }
         else {
-            user.cart.push({ productId: productID, quantity });
+            user.cart.push({ productId: productID, quantity ,price});
 
 
         }
@@ -40,8 +42,8 @@ module.exports = {
     findProduct: async (data) => {
         var result = await User.findOne({ _id: data }).populate({ path: 'cart.productId', model: 'products' }).lean()
         console.log('found product');
-        console.log(result.cart[0].productId);
-        console.log('price:',result.cart[0].productId.price);
+        // console.log(result.cart[0].productId);
+        // console.log('price:',result.cart[0].productId.price);
 
         
 
@@ -97,7 +99,7 @@ module.exports = {
                     {$set:{'cart.$.quantity':updatedQuantity}}
                 )
                 
-                    console.log(updatedQuantity);
+                    // console.log(updatedQuantity);
                 console.log('Cart quantity decremented successfully');
 
                     return updatedQuantity;
@@ -113,7 +115,62 @@ module.exports = {
             
 
 
-    }
+    },
+    updateUserCart:async (userId, productId, updatedPrice)=> {
+        try {
+            // Find the user by userId
+            const user = await User.findById(userId);
+    
+            // Find the index of the product in the user's cart
+            const productIndex = user.cart.findIndex(item => item.productId == productId);
+    
+            // If the product is found, update the price
+            if (productIndex !== -1) {
+                user.cart[productIndex].price = updatedPrice;
+            } else {
+                // If the product is not found, you might want to handle this case accordingly
+                console.error('Product not found in the user\'s cart');
+                return;
+            }
+    
+            // Save the updated user document
+            await user.save();
+    
+            console.log('User cart price updated successfully');
+        } catch (error) {
+            console.error('Error updating user cart price', error);
+            throw error;
+        }
+    },
+    removeItem: async (userid, productId) => {
+
+          
+            try {
+              // Find the user
+              const user = await User.findById(userid);
+              console.log('user:',user);
+          
+              // Remove the product from the cart
+              const updatedCart = user.cart.filter(item => item.productId.toString() !== productId);
+                console.log('updatedCart',updatedCart);
+              // Update the user's cart
+              user.cart = updatedCart;
+              await user.save();
+
+              return updatedCart;
+
+              
+            } catch (error) {
+              console.error('Error removing item from cart:', error);
+              
+            }
+          }
+
+
+        
+    
+
+    
  
 
 }

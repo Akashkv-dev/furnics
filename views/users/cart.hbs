@@ -52,12 +52,12 @@
                   <div class="p-5">
                     <div class="d-flex justify-content-between align-items-center mb-5">
                       <h1 class="fw-bold mb-0 text-black">Shopping Cart</h1>
-                      <h6 class="mb-0 text-muted">3 items</h6>
+                      {{!-- <h6 class="mb-0 text-muted">{{cartCount}} items</h6> --}}
                     </div>
                     {{#each cartItems}}
                     <hr class="my-4">
 
-                    <div class="row mb-4 d-flex justify-content-between align-items-center">
+                    <div id="cartrow_{{this.productId._id}}" class="row mb-4 d-flex justify-content-between align-items-center">
                       <div class="col-md-2 col-lg-2 col-xl-2">
                         <img src="../uploads/{{this.productId.image}}" class="img-fluid rounded-3" alt="product image">
                       </div>
@@ -77,16 +77,17 @@
 
                       </div>
                       <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-                        <h6 class="mb-0" id="price_{{this.productId._id}}">$ {{this.productId.price}}</h6>
+                        <h6 class="mb-0" id="price_{{this.productId._id}}">$ {{this.price}}</h6>
                       </div>
                       <div class="col-md-1 col-lg-1 col-xl-1 text-end">
-                        <a href="#!" class="text-muted"><i class="fas fa-times"></i></a>
+                        {{!-- <a href="#!" class="text-muted"><i class="fas fa-times"></i></a> --}}
+                        <i class="ti ti-trash" data-product-id="{{this.productId._id}}"></i>
                       </div>
                     </div>
                     {{/each}}
 
-                    {{!--
-                    <hr class="my-4">
+                    
+                    {{!-- <hr class="my-4">
 
                     <div class="row mb-4 d-flex justify-content-between align-items-center">
                       <div class="col-md-2 col-lg-2 col-xl-2">
@@ -152,12 +153,12 @@
                       </div>
                     </div>
 
-                    <hr class="my-4">
+                    <hr class="my-4"> --}}
 
                     <div class="pt-5">
-                      <h6 class="mb-0"><a href="#!" class="text-body"><i
+                      <h6 class="mb-0"><a href="/" class="text-body"><i
                             class="fas fa-long-arrow-alt-left me-2"></i>Back to shop</a></h6>
-                    </div> --}}
+                    </div>
                   </div>
                 </div>
                 <div class="col-lg-4 bg-grey">
@@ -166,8 +167,8 @@
                     <hr class="my-4">
 
                     <div class="d-flex justify-content-between mb-4">
-                      <h5 class="text-uppercase">items 3</h5>
-                      <h5>$ {{sum}}</h5>
+                      <h5 class="text-uppercase" id="cartCount">items {{cartCount}}</h5>
+                      <h5 id="cartprice">$ {{this.cartprice}}  {{sum}}</h5>
                     </div>
 
                     <h5 class="text-uppercase mb-3">Shipping</h5>
@@ -192,7 +193,7 @@
 
                     <div class="d-flex justify-content-between mb-5">
                       <h5 class="text-uppercase">Total price</h5>
-                      <h5>$ {{totalSum}}</h5>
+                      <h5 id="totalprice">$ {{this.totalprice}} {{totalSum}}</h5>
                     </div>
 
                     <button type="button" class="btn btn-dark btn-block btn-lg" data-mdb-ripple-color="dark">Checkout</button>
@@ -231,9 +232,13 @@
       // Update the quantity in the UI
       const quantityElement = $(`#quantity_${productId}`);
       const priceElement = $(`#price_${productId}`);
-    
+      const cartpriceElement = $(`#cartprice`);
+      const totalpriceElement = $(`#totalprice`);
+
       quantityElement.text(response.quantity);
       priceElement.text(response.price);
+      cartpriceElement.text(`$ ${response.cartSum}`);
+      totalpriceElement.text(`$ ${response.cartTotal}`);
 
       console.log(response.quantity)
 
@@ -248,6 +253,42 @@
       });
     });
   });
+
+
+{{!-- ********cartItem remove*********** --}}
+
+  $('.ti-trash').on('click', function () {
+  const productId = $(this).data('product-id');
+
+  $.ajax({
+    url: '/users/cart/remove',
+    method: 'POST',
+    data: {
+      productId: productId
+    },
+    success: function (response) {
+      console.log('Response from server:', response);
+
+      if (response.success) {
+        // Remove the item from the UI
+        $(`#cartrow_${productId}`).remove();
+
+        // Update the total price in the UI
+        $('#cartprice').text(`$ ${response.cartSum}`);
+        $('#totalprice').text(`$ ${response.cartTotal}`);
+        $('#cartCount').text(` ITEMS ${ response.cartCount}`);
+
+
+        console.log('Item removed successfully');
+      } else {
+        console.error('Error removing item');
+      }
+    },
+    error: function (error) {
+      console.error('Error removing item:', error);
+    }
+  });
+});
 </script>
 
 </body>

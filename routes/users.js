@@ -1,5 +1,5 @@
 var express = require('express');
-const { loginpage,userAuth,signpage,signUp,logout,allproducts,viewcart,addTocart,quantityUpdate } = require('../controller/user');
+const { loginpage,userAuth,signpage,signUp,logout,allproducts,viewcart,addTocart,quantityUpdate,cartItemRemove } = require('../controller/user');
 const isAuth =require('../middleware/isAuth')
 const noCache=require('../middleware/noCache');
 
@@ -18,8 +18,10 @@ router.post('/signedIn',signUp)
 router.get('/logout',logout)
 router.get('/addproducts',isAuth,allproducts);
 router.get('/cart',isAuth,viewcart)
-router.post('/cart/update',isAuth,quantityUpdate)
 router.get('/addtocart/:id',isAuth,addTocart)
+router.post('/cart/update',isAuth,quantityUpdate)
+router.post('/cart/remove',isAuth,cartItemRemove)
+
 
 
 
