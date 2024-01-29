@@ -40,14 +40,20 @@ module.exports = {
 
     },
     findProduct: async (data) => {
-        var result = await User.findOne({ _id: data }).populate({ path: 'cart.productId', model: 'products' }).lean()
+        var cart = await User.findOne({ _id: data }).populate({ path: 'cart.productId', model: 'products' }).lean()
         console.log('found product');
-        // console.log(result.cart[0].productId);
-        // console.log('price:',result.cart[0].productId.price);
-
-        
-
-        return result
+        if(cart.cart){
+            let totalPrice =0;
+            for (const cartItem of cart.cart){
+                if(cartItem.productId && cartItem.productId.price){
+                    totalPrice += cartItem.quantity * cartItem.productId.price;
+                }
+            }
+            return {cart, totalPrice};
+        }
+        else{
+            return {cart}
+        }
     },
     updateCartInc: async (userid, productId) => {
         const user = await User.findOneAndUpdate(
@@ -164,13 +170,8 @@ module.exports = {
               console.error('Error removing item from cart:', error);
               
             }
-          }
-
-
-        
+    },
     
 
-    
- 
 
 }

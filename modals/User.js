@@ -22,18 +22,6 @@ const userSchema=new mongoose.Schema({
         type:String,
         required:true
     },
-    // address:{
-    //     type:String,
-    //     required:true
-    // },
-    // city:{
-    //     type:String,
-    //     required:true
-    // },
-    // zip:{
-    //     type:Number,
-    //     required:true
-    // },
     role:{
         type:String,
         default:'user'
@@ -57,7 +45,40 @@ const userSchema=new mongoose.Schema({
             
 
         }
-    ]
+    ],
+    address:[
+        {
+            name:{
+                type:String,
+                required:true
+            },
+            phone:{
+                type:Number,
+                required:true
+            },
+            pincode:{
+                type:String,
+                required:true
+            },
+            landmark:{
+                type:String,
+                required:true
+            },
+            address:{
+                type:String,
+                required:true
+            },
+            city:{
+                type:String,
+                required:true
+            },
+            state:{
+                type:String,
+                required:true
+            }
+
+        }
+    ],
    
         
 })

@@ -21,14 +21,15 @@ module.exports = {
 
         const valid = await userH.validUser(req.body.email)
 
-        const currentPassword = await bcrypt.compare(req.body.password, valid.password)
-        console.log(currentPassword);
+        
 
 
         if (!valid) {
             res.render('users/login', { invalid: "invalid email" })
         }
         else {
+            const currentPassword = await bcrypt.compare(req.body.password, valid.password)
+        console.log(currentPassword);
             console.log(req.body);
             console.log(adminkey, adminpw);
             if (adminkey == req.body.email && adminpw == req.body.password) {
@@ -89,7 +90,7 @@ module.exports = {
     viewcart: async (req, res) => {
         const userid = req.session.userId
         const cartProduct = await userH.findProduct(userid)
-        const cartItems = cartProduct.cart || [];
+        const cartItems = cartProduct.cart.cart || [];
         
 
         if(cartItems.length>0){
@@ -104,8 +105,12 @@ module.exports = {
             const totalSum = sum + 5
 
             console.log(totalSum);
+            
+                
 
             res.render('users/cart', { cartItems,sum,totalSum,cartCount})
+
+            
 
 
         } catch (error) {
@@ -147,38 +152,36 @@ module.exports = {
     quantityUpdate: async (req, res) => {
         const userid = req.session.userId;
         var cartProduct = await userH.findProduct(userid)
-        const cart = cartProduct.cart
-        let updatedprice 
-
-        // const cartItems = cartProduct.cart || [];
-        // const sum = cartItems.reduce((sum, item) => sum + (item.quantity * item.productId.price), 0)
-        // const totalSum = sum + 5
+        const cart = cartProduct.cart.cart
+        let updatedprice;
+        let totalSum;
 
         const { productId, action } = req.body;
-        // console.log(productId, action);
-        // console.log(req.body);
+        console.log(productId, action);
+        console.log(req.body);
         try {
             if (action == 'increase') {
                 const updatedquantity = await userH.updateCartInc(userid, productId)
                 // updated cart
                 var cartProductF = await userH.findProduct(userid)
-                let sum
-                cartProductF.cart.forEach(item => {
+
+                let sum=0
+                cartProductF.cart.cart.forEach(item => {
                     if(item.productId._id==productId){
                     updatedprice = item.productId.price * updatedquantity
 
                     userH.updateUserCart(userid, productId, updatedprice)
                     }
                     sum += item.productId.price * item.quantity;
-                    // console.log('itemquantity',item.quantity);
+                    console.log('itemquantity',item.quantity);
                     
                 })
                 
-                const totalSum = sum + 5;
+                 totalSum = sum + 5;
 
 
-                // console.log('updatedprice',updatedprice);
-                // console.log('sum',sum);
+                console.log('updatedprice',updatedprice);
+                console.log('sum',sum);
 
                 
                 // console.log('last updated qty',updatedquantity);
@@ -191,7 +194,7 @@ module.exports = {
                     var cartProductF = await userH.findProduct(userid)
                     let sum=0
                     
-                    cartProductF.cart.forEach(item => {
+                    cartProductF.cart.cart.forEach(item => {
                         if(item.productId._id == productId){
                         updatedprice = item.productId.price * updatedquantity
                      
@@ -202,14 +205,11 @@ module.exports = {
 
                     })
 
-                    const totalSum = sum + 5;
+                     totalSum = sum + 5;
+                     // console.log('updatedprice',updatedprice);
 
-
-
-                    // console.log('updatedprice',updatedprice);
 
                     
-
                     // console.log('last updated qty',updatedquantity);
                     res.json({ quantity: updatedquantity, price: updatedprice, cartSum: sum, cartTotal: totalSum })
                 }
@@ -226,8 +226,8 @@ module.exports = {
     cartItemRemove: async (req, res) => {
         const userid = req.session.userId;
         const { productId } = req.body;
-        console.log('for removing:',productId)
-        console.log('userid:',userid);
+        // console.log('for removing:',productId)
+        // console.log('userid:',userid);
         let sum=0
         try {
            const updatedCart= await userH.removeItem(userid, productId)
@@ -254,6 +254,7 @@ module.exports = {
             console.error('remove issue', error);
             res.json({ success: false });
         }
-    }
+    },
+   
 
 } 

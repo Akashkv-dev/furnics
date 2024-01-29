@@ -1,0 +1,339 @@
+<style>
+  .text-font {
+    font-family: futura-pt, Tahoma, Geneva, Verdana, Arial, sans-serif;
+    font-weight: 700;
+    letter-spacing: .156rem;
+    font-size: 1.125rem;
+  }
+
+  .text-price {
+    padding: 0 .625rem;
+    font-family: futura-pt, Tahoma, Geneva, Verdana, Arial, sans-serif;
+    font-style: normal;
+    font-size: .75rem;
+    font-weight: 700;
+    line-height: .813rem;
+    letter-spacing: 1.6px;
+  }
+
+  .text-descriptions {
+    font-family: futura-pt, Tahoma, Geneva, Verdana, Arial, sans-serif;
+    font-style: normal;
+    font-size: .75rem;
+    font-weight: 400;
+    line-height: 1.125rem;
+    margin: .313rem 0 .938rem;
+    padding: 0 .625rem;
+  }
+
+  .button-color {
+    color: #4e4e4e;
+    border-color: #4e4e4e;
+  }
+
+  .button-order {
+    font-family: futura-pt, Tahoma, Geneva, Verdana, Arial, sans-serif;
+    font-style: normal;
+    font-size: .75rem;
+    font-weight: 700;
+    background-color: hsl(90, 40%, 50%);
+    color: white;
+  }
+
+  /* Hide the arrows in number input fields */
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+  body{
+    background-color: #eae8e8;
+  }
+</style>
+
+<body >
+  
+
+
+<div class="container my-5 py-5" >
+  <!--Section: Design Block-->
+  <section>
+    <div class="row">
+      <div class="col-md-8 mb-4">
+        <div class="card mb-4">
+          <div class="card-header py-3">
+            <h5 class="mb-0 text-font text-uppercase">Delivery address</h5>
+          </div>
+          <div class="card-body">
+            <form action="/users/postcheckout" method="post">
+
+              <div class="row mb-4">
+                <div class="col">
+                  <div class="form-outline">
+                    <input type="text" name="name" id="form11Example1" class="form-control" required/>
+                    <label class="form-label" for="form11Example1">Name</label>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-outline">
+                    <input type="number" name="phone" id="form11Example6" class="form-control" required/>
+                    <label class="form-label" for="form11Example6">Phone</label>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-4">
+                <div class="col">
+                  <div class="form-outline mb-4">
+                    <input type="number" name="pincode" inputmode="numeric" id="form11Example3" class="form-control" required/>
+                    <label class="form-label" for="form11Example3">Pincode</label>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-outline mb-4">
+                    <input type="text" name="landmark" id="form11Example4" class="form-control" required/>
+                    <label class="form-label" for="form11Example4">Landmark</label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-outline mb-4">
+                <textarea class="form-control" name="address" id="form11Example7" rows="4" required></textarea>
+                <label class="form-label" for="form11Example7">Address</label>
+              </div>
+
+
+
+              <div class="row mb-4">
+                <div class="col">
+
+                  <div class="form-outline mb-4">
+                    <input type="text" name="city" id="form11Example5" class="form-control" required />
+                    <label class="form-label" for="form11Example5">City</label>
+                  </div>
+                </div>
+
+                <div class="col">
+                  <div class="form-outline mb-4">
+                    <select id="form11Example5" class="form-select" name="state" required>
+                      <option value="" disabled selected>Select your state</option>
+                      <option value="Andhra Pradesh">Andhra Pradesh</option>
+                      <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                      <option value="Assam">Assam</option>
+                      <option value="Bihar">Bihar</option>
+                      <option value="Chhattisgarh">Chhattisgarh</option>
+                      <option value="Goa">Goa</option>
+                      <option value="Gujarat">Gujarat</option>
+                      <option value="Haryana">Haryana</option>
+                      <option value="Himachal Pradesh">Himachal Pradesh</option>
+                      <option value="Jharkhand">Jharkhand</option>
+                      <option value="Karnataka">Karnataka</option>
+                      <option value="Kerala">Kerala</option>
+                      <option value="Madhya Pradesh">Madhya Pradesh</option>
+                      <option value="Maharashtra">Maharashtra</option>
+                      <option value="Manipur">Manipur</option>
+                      <option value="Meghalaya">Meghalaya</option>
+                      <option value="Mizoram">Mizoram</option>
+                      <option value="Nagaland">Nagaland</option>
+                      <option value="Odisha">Odisha</option>
+                      <option value="Punjab">Punjab</option>
+                      <option value="Rajasthan">Rajasthan</option>
+                      <option value="Sikkim">Sikkim</option>
+                      <option value="Tamil Nadu">Tamil Nadu</option>
+                      <option value="Telangana">Telangana</option>
+                      <option value="Tripura">Tripura</option>
+                      <option value="Uttar Pradesh">Uttar Pradesh</option>
+                      <option value="Uttarakhand">Uttarakhand</option>
+                      <option value="West Bengal">West Bengal</option>
+                    </select>
+                    <label class="form-label" for="form11Example5">State</label>
+                  </div>
+                </div>
+              </div>
+
+              
+            
+          </div>
+        </div>
+
+      </div>
+      <div class="col-md-4 mb-4 position-static">
+        <div class="card mb-4">
+          <div class="card-header py-3">
+            <h5 class="mb-0 text-font"> item {{cartCount}} </h5>
+          </div>
+
+          {{#each cart}}
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-4">
+                <img src="../uploads/{{this.productId.image}}" class="rounded-3"
+                  style="width: 100px;" alt="product img" />
+              </div>
+              
+              <div class="col-md-6 ms-3">
+                <span class="mb-0 text-price">${{this.price}}</span>
+                <p class="mb-0 text-descriptions">{{this.productId.productname}} </p>
+                {{!-- <span class="text-descriptions fw-bold">Black</span> <span class="text-descriptions fw-bold">UK 8</span> --}}
+                <p class="text-descriptions mt-1">Qty:<span class="text-descriptions fw-bold">{{this.quantity}}</span>
+                </p>
+              </div>
+              {{/each}}
+            </div>
+            <div class="card-footer mt-4">
+              <ul class="list-group list-group-flush">
+                <li
+                  class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0 text-muted">
+                  Subtotal
+                  <span>${{totalPrice}}</span>
+                </li>
+                <li
+                  class="list-group-item d-flex justify-content-between align-items-center px-0 fw-bold text-uppercase">
+                  Total to pay
+                  <span>${{totalPay}}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    
+    
+  </section>
+  <div class="col-md-8 mb-4">
+        
+              <!-- Your payment option form goes here -->
+              <!-- Existing HTML code -->
+
+              <!-- Payment Options -->
+              <div class="card mb-4">
+                <div class="card-body">
+                  <p class="text-uppercase h4 text-font">Payment Options</p>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <!-- Card Payment Option -->
+                      <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="paymentOption" id="cardPayment" value="card">
+                        <label class="form-check-label" for="cardPayment">
+                          Credit/Debit Card
+                        </label>
+                      </div>
+
+                      <!-- Cash on Delivery Option -->
+                      <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="paymentOption" id="codPayment" value="cod">
+                        <label class="form-check-label" for="codPayment">
+                          Cash on Delivery
+                        </label>
+                      </div>
+
+                      <!-- UPI Payment Option -->
+                      <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="paymentOption" id="upiPayment" value="upi">
+                        <label class="form-check-label" for="upiPayment">
+                          UPI
+                        </label>
+                      </div>
+
+                      <!-- Add more payment options as needed -->
+
+                      <!-- Payment Details Fields -->
+                        <!-- For example, card number, expiry date, CVV, etc. -->
+                        <div id="cardPaymentFields" class="d-none">
+                          <!-- Add fields for card payment details here -->
+                          <div class="form-outline mb-4">
+                            <input type="number" id="cardNumber" class="form-control" />
+                            <label class="form-label" for="cardNumber">Card Number</label>
+                          </div>
+
+                          <div class="form-outline mb-4">
+                            <input type="number" id="expiryDate" class="form-control" />
+                            <label class="form-label" for="expiryDate">Expiry Date</label>
+                          </div>
+
+                          <div class="form-outline mb-4">
+                            <input type="number" id="cvv" class="form-control" />
+                            <label class="form-label" for="cvv">CVV</label>
+                          </div>
+                        </div>
+                      </div>
+
+                        <!-- For example, UPI ID -->
+                        <div id="upiPaymentFields" class="d-none">
+                          <!-- Add fields for UPI payment details here -->
+                          <div class="form-outline mb-4">
+                            <input type="text" id="upiId" class="form-control" />
+                            <label class="form-label" for="upiId">UPI ID</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Place order button -->
+              <div class="text-center">
+                <button type="submit"  class="btn button-order col-md-10 mb-3" id="placeOrderBtn">Place order</button>
+              </div>
+              </form>
+
+                </div>
+              </div>
+
+
+              
+
+
+      </div>
+  <!--Section: Design Block-->
+</div>
+
+<script>
+  // Add event listener to handle payment option changes
+  document.querySelectorAll('input[name="paymentOption"]').forEach(function (option) {
+    option.addEventListener('change', function () {
+      handlePaymentOptionChange(this.value);
+    });
+  });
+
+  // Function to handle payment option change
+  function handlePaymentOptionChange(selectedOption) {
+    // Hide all payment detail fields
+    document.querySelectorAll('[id$="PaymentFields"]').forEach(function (field) {
+      field.classList.add('d-none');
+    });
+
+    // Show relevant payment detail fields based on the selected option
+    document.getElementById(selectedOption + 'PaymentFields').classList.remove('d-none');
+  }
+
+  // Event listener for Place Order button
+  document.getElementById('placeOrderBtn').addEventListener('click', function () {
+    // Implement logic to handle the selected payment option and process the order
+    var selectedPaymentOption = document.querySelector('input[name="paymentOption"]:checked');
+
+    if (selectedPaymentOption) {
+      var paymentOptionValue = selectedPaymentOption.value;
+
+      // Implement logic to handle the selected payment option and process the order accordingly
+      switch (paymentOptionValue) {
+        case 'card':
+          // Implement logic for card payment
+          break;
+        case 'cod':
+          // Implement logic for cash on delivery
+          break;
+        case 'upi':
+          // Implement logic for UPI payment
+          break;
+        // Add more cases for additional payment options as needed
+      }
+    } else {
+      // Inform the user to select a payment option
+      alert('Please select a payment option');
+    }
+  });
+</script>
+</body>
