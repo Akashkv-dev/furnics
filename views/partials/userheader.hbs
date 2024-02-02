@@ -55,11 +55,11 @@
         </symbol>
     </svg>
 
-    <div id="preloader">
+    {{!-- <div id="preloader">
         <span class="loader">
             <span class="loader-inner"></span>
         </span>
-    </div>
+    </div> --}}
 
     <div class="search-box position-relative overflow-hidden w-100">
         <div class="search-wrap">
@@ -79,7 +79,7 @@
     <header id="header" class="site-header text-black">
         <nav id="header-nav" class="navbar navbar-expand-lg px-3 mb-3 fixed-top bg-light">
             <div class="container-fluid">
-                <a class="navbar-brand" href="index.html">
+                <a class="navbar-brand" href="#">
                     <img src="images/main-logo.png" class="logo">
                 </a>
                 <button class="navbar-toggler d-flex d-lg-none order-3 p-2" type="button" data-bs-toggle="offcanvas"
@@ -98,13 +98,13 @@
                         <button type="button" class="btn-close btn-close-black" data-bs-dismiss="offcanvas"
                             aria-label="Close" data-bs-target="#bdNavbar"></button>
                     </div>
+                    {{#unless isHome}}
                     <div class="offcanvas-body">
                         <ul id="navbar"
                             class="navbar-nav text-uppercase justify-content-end align-items-center flex-grow-1 pe-3">
                             <li class="nav-item dropdown">
-                                <a class="nav-link me-4 active dropdown-toggle" href="#billboard" id="dropdownPages"
-                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Home</a>
-                                <ul class="dropdown-menu list-unstyled" aria-labelledby="dropdownPages">
+                                <a class="nav-link me-4 active " href="/" id="dropdownPages">Home</a>
+                                {{!-- <ul class="dropdown-menu list-unstyled" aria-labelledby="dropdownPages">
                                     <li>
                                         <a href="index.html" class="dropdown-item item-anchor">Homepage 1</a>
                                     </li>
@@ -112,12 +112,12 @@
                                         <a href="home2.html" class="dropdown-item item-anchor">Homepage V2 <span
                                                 class="badge bg-secondary text-dark ms-2">PRO</span></a>
                                     </li>
-                                </ul>
+                                </ul> --}}
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link me-4" href="#about-us">About Us</a>
                             </li>
-                            <li class="nav-item dropdown me-4">
+                            {{!-- <li class="nav-item dropdown me-4">
                                 <a class="nav-link dropdown-toggle" href="#" id="dropdownPages"
                                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Shop</a>
                                 <ul class="dropdown-menu list-unstyled" aria-labelledby="dropdownPages">
@@ -130,7 +130,7 @@
                                             <span class="badge bg-secondary text-dark ms-2">PRO</span></a>
                                     </li>
                                 </ul>
-                            </li>
+                            </li> --}}
                             <li class="nav-item dropdown me-4">
                                 <a class="nav-link dropdown-toggle" href="#" id="dropdownPages"
                                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Catagory</a>
@@ -157,44 +157,24 @@
                                     </svg>Furnics</a>
                                 <ul class="dropdown-menu list-unstyled" aria-labelledby="dropdownPages">
                                     <li>
-                                        <a href="about-us.html" class="dropdown-item item-anchor">About <span
-                                                class="badge bg-secondary text-dark ms-2">PRO</span></a>
+                                        <a href="about-us.html" class="dropdown-item item-anchor">About </a>
                                     </li>
                                     <li>
-                                        <a href="cart.html" class="dropdown-item item-anchor">Cart <span
-                                                class="badge bg-secondary text-dark ms-2">PRO</span></a>
+                                        <a href="/users/cart" class="dropdown-item item-anchor">Cart </a>
+                                    </li>
+                                                                        
+                                    <li>
+                                        <a href="my-account.html" class="dropdown-item item-anchor">My Account </a>
                                     </li>
                                     <li>
-                                        <a href="checkout.html" class="dropdown-item item-anchor">Checkout <span
-                                                class="badge bg-secondary text-dark ms-2">PRO</span></a>
+                                        <a href="/users/myorders" class="dropdown-item item-anchor">My Orders
+                                            </a>
                                     </li>
                                     <li>
-                                        <a href="contact.html" class="dropdown-item item-anchor">Contact <span
-                                                class="badge bg-secondary text-dark ms-2">PRO</span></a>
+                                        <a href="wishlist.html" class="dropdown-item item-anchor">Wishlist </a>
                                     </li>
                                     <li>
-                                        <a href="error-page.html" class="dropdown-item item-anchor">Error Page <span
-                                                class="badge bg-secondary text-dark ms-2">PRO</span></a>
-                                    </li>
-                                    <li>
-                                        <a href="faqs.html" class="dropdown-item item-anchor">FAQs <span
-                                                class="badge bg-secondary text-dark ms-2">PRO</span></a>
-                                    </li>
-                                    <li>
-                                        <a href="my-account.html" class="dropdown-item item-anchor">My Account <span
-                                                class="badge bg-secondary text-dark ms-2">PRO</span></a>
-                                    </li>
-                                    <li>
-                                        <a href="order-tracking.html" class="dropdown-item item-anchor">Order Tracking
-                                            <span class="badge bg-secondary text-dark ms-2">PRO</span></a>
-                                    </li>
-                                    <li>
-                                        <a href="wishlist.html" class="dropdown-item item-anchor">Wishlist <span
-                                                class="badge bg-secondary text-dark ms-2">PRO</span></a>
-                                    </li>
-                                    <li>
-                                        <a href="/users/logout" class="dropdown-item item-anchor">Logout <span
-                                                class="badge bg-secondary text-dark ms-2">PRO</span></a>
+                                        <a href="/users/logout" class="dropdown-item item-anchor">Logout </a>
                                     </li>
                                     {{!-- <li>
                                         <a href="single-product.html" class="dropdown-item item-anchor">Single Product
@@ -240,6 +220,7 @@
                             </li>
                         </ul>
                     </div>
+                    {{/unless}}
                 </div>
             </div>
         </nav>
@@ -250,5 +231,18 @@
     <script type="text/javascript" src="js/plugins.js"></script>
     <script type="text/javascript" src="js/script.js"></script>
 
+    
 
+<script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Set isHome based on your logic
+            var isHome = window.location.pathname === '/'; // Adjust this condition based on your actual home page path
+
+            // Use isHome to conditionally hide the Home link
+            var homeLink = document.querySelector('.navbar-nav .nav-link[href="/"]');
+            if (homeLink && isHome) {
+                homeLink.style.display = 'none';
+            }
+        });
+    </script>
 </body>

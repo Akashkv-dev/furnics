@@ -1,0 +1,56 @@
+
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+
+<body>
+
+  <h2>Your Orders</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Order ID</th>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Total Price</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+        {{#each orders}}
+      <tr>
+        <td>{{this.orderid}}</td>
+        <td></td>
+        <td>2</td>
+        <td>{{this.totalprice}}</td>
+        <td>{{this.status}}</td>
+      </tr>
+      {{!-- <tr>
+        <td>2</td>
+        <td>Product B</td>
+        <td>1</td>
+        <td>$30.00</td>
+        <td>Processing</td>
+      </tr> --}}
+      <!-- Add more rows as needed -->
+    </tbody>
+    {{/each}}
+  </table>
+
+</body>
+

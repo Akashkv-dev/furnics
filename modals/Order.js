@@ -7,7 +7,8 @@ const orderSchema = new mongoose.Schema({
         required: true
     },
     orderid: {
-        type: String
+        type: String,
+        required: true
     },
     orderdate: {
         type: Date,
@@ -43,10 +44,9 @@ const orderSchema = new mongoose.Schema({
     },
     cart: [
         {
-            product_id: {
+            productId: {
                 type: mongoose.Schema.Types.ObjectId,
-                required: true,
-                ref: "Products",
+                ref: "products",
             },
             quantity: {
                 type: Number,
@@ -68,11 +68,14 @@ const orderSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    payment: {
-        paymentType: String,
-        paymentId: String,
-        paymentStatus: String,
-      }
+    paymentid: {
+        type: String,
+        default: 'null'
+      },
+    paymentmethod:{
+        type:String,
+        required:true
+    }  
 
 });
 

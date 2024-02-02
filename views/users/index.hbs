@@ -168,7 +168,7 @@
                     </div>
                     <div class="cart-concern">
                       <h3 class="card-title text-uppercase pt-3 text-primary">
-                        <a href="single-product.html" class="text-primary">{{this.productname}}</a>
+                        <a href="/users/productview/{{this._id}}" class="text-primary">{{this.productname}}</a>
                       </h3>
                       <div class="cart-info">
                         <a class="pseudo-text-effect" href="/users/addtocart/{{this._id}}" data-after="ADD TO CART"><span>${{this.price}}</span></a>
@@ -348,10 +348,6 @@
     {{!-- *****************userfooter partials**************************** --}}
     {{> userfooter}}
 
-    {{!-- <script src="js/jquery-1.11.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
-    <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
-    <script type="text/javascript" src="js/plugins.js"></script>
-    <script type="text/javascript" src="js/script.js"></script> --}}
+    
     
   </body>

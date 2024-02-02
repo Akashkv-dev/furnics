@@ -42,6 +42,8 @@ module.exports = {
     findProduct: async (data) => {
         var cart = await User.findOne({ _id: data }).populate({ path: 'cart.productId', model: 'products' }).lean()
         console.log('found product');
+        console.log(cart.cart.productId);
+        
         if(cart.cart){
             let totalPrice =0;
             for (const cartItem of cart.cart){
@@ -55,26 +57,36 @@ module.exports = {
             return {cart}
         }
     },
-    updateCartInc: async (userid, productId) => {
-        const user = await User.findOneAndUpdate(
-            { _id: userid, 'cart.productId': productId },
-            { $inc: { 'cart.$.quantity': 1 } },
-            { new: true })
-
-            console.log(user);
-
-        const foundProduct = user.cart.find(item => item.productId.toString() == productId);
-
-        if (foundProduct) {
-            
-            const updatedQuantity = foundProduct.quantity;
-            console.log(updatedQuantity);
-            console.log('Cart quantity incremented successfully');
-
-            return updatedQuantity;
+    updateCartInc: async (userid, productId, stock) => {
+        const user = await User.findOne({ _id: userid, 'cart.productId': productId });
+    
+        if (user) {
+            const foundProduct = user.cart.find(item => item.productId.toString() === productId);
+    
+            if (foundProduct) {
+                const currentQuantity = foundProduct.quantity;
+                const availableStock = stock;
+    
+                if (currentQuantity < availableStock) {
+                    const remainingStock = availableStock - currentQuantity;
+                    const incrementQuantity = Math.min(1, remainingStock);
+    
+                    const updatedUser = await User.findOneAndUpdate(
+                        { _id: userid, 'cart.productId': productId },
+                        { $inc: { 'cart.$.quantity': incrementQuantity } },
+                        { new: true }
+                    );
+    
+                    console.log(updatedUser);
+                    console.log('Cart quantity incremented successfully');
+    
+                    return updatedUser.cart.find(item => item.productId.toString() === productId).quantity;
+                } else {
+                    console.log('Cannot increment cart quantity, reached maximum stock limit');
+                    return currentQuantity;
+                }
+            }
         }
-
-
     },
     updateCartDec:async (userid,productId)=>{
         // Find the user

@@ -157,11 +157,17 @@ module.exports = {
         let totalSum;
 
         const { productId, action } = req.body;
-        console.log(productId, action);
-        console.log(req.body);
+        // console.log(productId, action);
+        // console.log(req.body);
+        const product  = await productH.findItem(productId)
+        const stock = product.quantity
+
+        // console.log('stock',stock.quantity);
         try {
-            if (action == 'increase') {
-                const updatedquantity = await userH.updateCartInc(userid, productId)
+            if (action == 'increase' ) {
+                const updatedquantity = await userH.updateCartInc(userid, productId,stock)
+
+                // if(updatedquantity<=stock.quantity){
                 // updated cart
                 var cartProductF = await userH.findProduct(userid)
 
@@ -173,23 +179,28 @@ module.exports = {
                     userH.updateUserCart(userid, productId, updatedprice)
                     }
                     sum += item.productId.price * item.quantity;
-                    console.log('itemquantity',item.quantity);
+                    // console.log('itemquantity',item.quantity);
                     
                 })
                 
                  totalSum = sum + 5;
 
 
-                console.log('updatedprice',updatedprice);
-                console.log('sum',sum);
+                // console.log('updatedprice',updatedprice);
+                // console.log('sum',sum);
 
                 
                 // console.log('last updated qty',updatedquantity);
                 res.json({ quantity: updatedquantity, price: updatedprice, cartSum: sum, cartTotal: totalSum })
+            // }
+            // else{
+            //     res.json('outofstock')
+            // }
 
             } else {
                 if (action == 'decrease') {
                     const updatedquantity = await userH.updateCartDec(userid, productId)
+                    
                     // updated cart
                     var cartProductF = await userH.findProduct(userid)
                     let sum=0
@@ -255,6 +266,14 @@ module.exports = {
             res.json({ success: false });
         }
     },
+    productpage:async (req,res)=>{
+        const productId =req.params.id
+        const item =await productH.findItem(productId)
+        const isUser = req.session.loggedIn
+        // console.log('product',product);
+
+        res.render('users/productpage',{item,isUser})
+    }
    
 
 } 

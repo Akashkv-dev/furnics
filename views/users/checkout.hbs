@@ -69,7 +69,7 @@
             <h5 class="mb-0 text-font text-uppercase">Delivery address</h5>
           </div>
           <div class="card-body">
-            <form action="/users/postcheckout" method="post">
+            <form action="/users/postcheckout" method="post" id="placeOrderBtn">
 
               <div class="row mb-4">
                 <div class="col">
@@ -233,9 +233,9 @@
 
                       <!-- UPI Payment Option -->
                       <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="paymentOption" id="upiPayment" value="upi">
-                        <label class="form-check-label" for="upiPayment">
-                          UPI
+                      <input class="form-check-input" type="radio" name="paymentOption" id="razorPayment" value="razorpay" checked>
+                        <label class="form-check-label" for="razorPayment">
+                          Razorpay
                         </label>
                       </div>
 
@@ -275,7 +275,7 @@
                   </div>
                   <!-- Place order button -->
               <div class="text-center">
-                <button type="submit"  class="btn button-order col-md-10 mb-3" id="placeOrderBtn">Place order</button>
+                <button type="submit"  class="btn button-order col-md-10 mb-3" >Place order</button>
               </div>
               </form>
 
@@ -290,50 +290,75 @@
   <!--Section: Design Block-->
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 <script>
-  // Add event listener to handle payment option changes
-  document.querySelectorAll('input[name="paymentOption"]').forEach(function (option) {
-    option.addEventListener('change', function () {
-      handlePaymentOptionChange(this.value);
+    $("#placeOrderBtn").submit((e) => {
+        e.preventDefault();
+        var paymentMethod = $("input[name='paymentOption']:checked").val();
+        console.log(paymentMethod)
+        if (paymentMethod === 'razorpay') {
+            $.ajax({
+                url: '/users/postcheckout', 
+                method: 'POST',
+                data: $("#placeOrderBtn").serialize(),
+                success: (res) => {
+                    razorpay(res)
+                },
+                error: (xhr, status, error) => {
+                    console.error("AJAX Error:", status, error);
+                }
+            });
+        } 
     });
-  });
 
-  // Function to handle payment option change
-  function handlePaymentOptionChange(selectedOption) {
-    // Hide all payment detail fields
-    document.querySelectorAll('[id$="PaymentFields"]').forEach(function (field) {
-      field.classList.add('d-none');
-    });
-
-    // Show relevant payment detail fields based on the selected option
-    document.getElementById(selectedOption + 'PaymentFields').classList.remove('d-none');
-  }
-
-  // Event listener for Place Order button
-  document.getElementById('placeOrderBtn').addEventListener('click', function () {
-    // Implement logic to handle the selected payment option and process the order
-    var selectedPaymentOption = document.querySelector('input[name="paymentOption"]:checked');
-
-    if (selectedPaymentOption) {
-      var paymentOptionValue = selectedPaymentOption.value;
-
-      // Implement logic to handle the selected payment option and process the order accordingly
-      switch (paymentOptionValue) {
-        case 'card':
-          // Implement logic for card payment
-          break;
-        case 'cod':
-          // Implement logic for cash on delivery
-          break;
-        case 'upi':
-          // Implement logic for UPI payment
-          break;
-        // Add more cases for additional payment options as needed
-      }
-    } else {
-      // Inform the user to select a payment option
-      alert('Please select a payment option');
+    function razorpay(order) {
+        var options = {
+            "key": "rzp_test_PTrEWw4jwtJptK", // Enter the Key ID generated from the Dashboard
+            "amount": order.amount * 100 * 83, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            "currency": "INR",
+            "name": "Furnics",
+            "description": "Test Transaction",
+            "image": "",
+            "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+            "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
+            "handler": function (response) {
+                verify(response, order.receipt);
+            },
+            "prefill": {
+                "name": $("#name").val(),
+                "address": $("#address").val(),
+                "contact": $("#contact").val(),
+            },
+            "notes": {
+                "address": "Razorpay Corporate Office"
+            },
+            "theme": {
+                "color": "#FFFF00"
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.open();
     }
-  });
+    function verify(payment, orderID) {
+        $.ajax({
+            url: '/users/verifypayment',
+            method: 'POST',
+            data: {
+                payment,
+                orderID
+            },
+            success: (response) => {
+                if (response == "success") {
+                    location.href = "/users/success" //+ orderID;
+                }
+                else {
+                    location.href = "/users/fail";
+                }
+            },
+        })
+    } 
 </script>
 </body>
