@@ -1,10 +1,32 @@
 const User = require('../modals/User')
+const Trash=require('../modals/Trash')
 
 module.exports = {
     validUser: async (data) => {
         var result = await User.findOne({ email: data }).lean()
         return result;
     },
+    alluser:async ()=>{
+        const result=await User.find({role:'user'}).lean()
+        return result;
+    },
+    findedituserbyid: async (data) => {
+        const result = await User.findOne({ _id: data }).lean();
+        return result;
+    },
+      insertupdate: async (data, productid) => {
+        const result = await User.updateOne(
+          { _id: productid },
+          {
+            $set: {
+              name: data.name,
+              email: data.email,
+              phone: data.phone,
+            },
+          }
+        );
+        return result;
+      },
     insertData: async (data) => {
         var result = await User.insertMany(data)
         return result;
@@ -183,6 +205,35 @@ module.exports = {
               
             }
     },
+    insertdelete:async (data)=>{
+        const result=await Trash.insertMany(data)
+        return result;
+    },
+    delete:async (data)=>{
+        await User.deleteOne({_id:data})
+    },
+    verified: async (data) => {
+        await User.updateOne({ _id: data }, { $set: { verification: true } });
+    },
+    gmail: async (email, name) => {
+        var transporter = nodemailer.createTransport({
+          service: "gmail",
+          auth: {
+            user: process.env.EMAIL,
+            pass: process.env.EMAILPW,
+          },
+        });
+        var mailOptions = {
+          from: "akashkv11@gmail.com",
+          to: email,
+          subject: "Welcome " + name,
+          text: "Enjoy Your Shopping ",
+        };
+        transporter.sendMail(mailOptions, function (error, info) {});
+    },
+    forgotpassword: async (email1, password1) => {
+        await User.updateOne({ email: email1 }, { $set: { password: password1 } });
+    }  
     
 
 

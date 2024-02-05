@@ -119,10 +119,11 @@ module.exports={
     },
     findorders:async (req,res)=>{
        const userid= req.session.userId
+       const isUser=req.session.loggedIn
 
        const orders=await orderH.orderfinding(userid)
 
-       res.render('users/myorders',{ orders })
+       res.render('users/myorders',{ orders,isUser })
 
     }
 }

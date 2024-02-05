@@ -17,7 +17,10 @@
     }
   </style>
 
+  {{> userheader}}
+
 <body>
+
 
   <h2>Your Orders</h2>
 
@@ -35,19 +38,12 @@
         {{#each orders}}
       <tr>
         <td>{{this.orderid}}</td>
-        <td></td>
+        <td><a href="/users/product/{{this._id}}">Product details</a></td>
         <td>2</td>
         <td>{{this.totalprice}}</td>
         <td>{{this.status}}</td>
       </tr>
-      {{!-- <tr>
-        <td>2</td>
-        <td>Product B</td>
-        <td>1</td>
-        <td>$30.00</td>
-        <td>Processing</td>
-      </tr> --}}
-      <!-- Add more rows as needed -->
+      
     </tbody>
     {{/each}}
   </table>

@@ -2,13 +2,24 @@ const express =require('express')
 const router =express.Router()
 const upload =require('../middleware/multer.js')
 
-const {dashboard,addproducts,adminlogout,productAdded} =require('../controller/admin.js')
+const {dashboard,addproducts,adminlogout,productAdded,allorders,productdetail,confirmorder,shiporder,deliverorder,cancelorder,allusers,
+edituser,updateuser,deleteuser} =require('../controller/admin.js')
 
 
 router.get('/dashboard',dashboard)
 router.get('/addproducts',addproducts)
 router.get('/logout',adminlogout)
 router.post('/productadded',upload.single('image'),productAdded)
+router.get('/allorders',allorders)
+router.get('/product/:id',productdetail)
+router.get('/confirm/:id',confirmorder)
+router.get('/shipped/:id',shiporder)
+router.get('/delivered/:id',deliverorder)
+router.get('/cancelled/:id',cancelorder)
+router.get('/allusers',allusers)
+router.get('/edituser/:id',edituser)
+router.post('/updateuser/:id',updateuser)
+router.get('/deleteuser/:id',deleteuser)
 
 module.exports = router;
 

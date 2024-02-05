@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt')
 const userH = require('../helpers/userHelper')
 const productH = require('../helpers/productHelper')
 const { request } = require('express')
+const otp = require('../config/otp')
 
 module.exports = {
     loginpage: (req, res) => {
@@ -273,7 +274,70 @@ module.exports = {
         // console.log('product',product);
 
         res.render('users/productpage',{item,isUser})
-    }
+    },
+    edituser: async (req, res) => {
+        const userid = req.session.userId
+        const data = await userH.findedituserbyid(userid)
+        console.log(data);
+
+        res.render('users/profile', { data: data })
+    },
+    updateuser: async (req, res) => {
+        const userid = req.params.id
+        const datas = {
+            name: req.body.name,
+            email: req.body.email,
+            phone: req.body.phone,
+        }
+        console.log(datas);
+        await userH.insertupdate(datas, userid);
+        res.redirect('/users/profile')
+    },
+    forgotpassword: async (req, res) => {
+        res.render('users/forgotpassword')
+    },
+    validateotp: async (req, res) => {
+
+        const result = await userH.findedituserbyid(req.body.id)
+        if ((req.body.enteredOTP) && (result)) {
+          if (result.verification == req.body.enteredOTP) {
+            await userH.verified(req.body.id)
+            res.json({ success: true })
+            await userH.gmail(result.email, result.name) //welcome mail
+            res.render('users/login')
+          }
+          else {
+            await userH.delete(req.body._id)
+            res.json({ success: false });
+          }
+        }
+        else {
+          await userH.delete(req.body._id)
+          res.status(422).json({ error: "Field can't be empty!" })
+        }
+      },
+      timeexeed: async (req, res) => {
+        const proid = req.params.id
+        await userH.delete(proid)
+        res.render('users/signup')
+      },
+      sendotp: async (req, res) => {
+        const result = await userH.validUser(req.body.email)
+        if (result) {
+          const generatedotp = await otp.generateOTP()
+          await otp.sendOTPEmail(req.body.email, generatedotp);
+          res.json(generatedotp)
+        }
+        else {
+          res.json({ error: "error" })
+        }
+      },
+      resetpassword: async (req, res) => {
+        const hashpassword = await bcrypt.hash(req.body.newPassword, 10)
+        await userH.forgotpassword(req.body.email, hashpassword)
+        res.json("success")
+      }
+
    
 
 } 

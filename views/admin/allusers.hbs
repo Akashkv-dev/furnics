@@ -1,0 +1,93 @@
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<!-- Include Bootstrap JS (bundle) without integrity attribute -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+
+{{!--
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Include Bootstrap CSS -->
+
+</head> --}}
+
+<body>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>phoneNo</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each users}}
+            <tr>
+                <th scope="row">{{this.name}}</th>
+                <td>{{this.email}}</td>
+                <td>{{this.phone}}</td>
+                <td>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            Active
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="/admin/edituser/{{this._id}}">Edit</a>
+                            <a class="dropdown-item" href="/admin/deleteuser/{{this._id}}"
+                                onclick="return confirm('Are you want to Delete ?')">
+                                Delete</a>
+                            {{#if status}}
+                            <a class="dropdown-item" href="/admin/unblockuser/{{this._id}}">
+                                Unblock User
+                            </a>
+                            {{else}}
+                            <a class="dropdown-item" href="/admin/blockuser/{{this._id}}"
+                                onclick="return confirm('Are you Sure Block {{this.name}} ?')">
+                                Block User
+                            </a>
+                            {{/if}}
+                            
+
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"
+        integrity="sha256-oa5io9gszzQSg3cF0NmOafHTs6+cmTuxU+oUDgZ1zBo=" crossorigin="anonymous"></script>
+
+    <!-- Include Bootstrap JS (bundle) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-iVXEAgQCBQNOf0l4GqjXgF5f5I5/GyZgTCsCCnbKd8rPZPFF73VS9wbF5Yx1PiF"
+        crossorigin="anonymous"></script>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    // Check if jQuery is defined before using it
+    if (window.jQuery) {
+        $(function () {
+            $(".dropdown-menu").on('click', 'a', function () {
+                $(this).parents('.dropdown').find('button').text($(this).text());
+            });
+        });
+    }
+
+</script>
