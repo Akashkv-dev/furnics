@@ -828,7 +828,7 @@ h5 {
 
 #billboard .swiper-pagination {
   left: 0px;
-  bottom: 0px;
+  bottom: 65px;
 }
 
 .swiper-pagination .swiper-pagination-bullet {
@@ -881,7 +881,7 @@ h5 {
 
   #billboard .swiper-pagination {
     right: 0;
-    bottom: 60px;
+    bottom: -170px;
     left: 0;
   }
 }

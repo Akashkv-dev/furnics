@@ -12,8 +12,7 @@ module.exports = {
     dashboard: (req, res) => {
         res.render('admin/admin')
     },
-    addproducts:
-        (req, res) => {
+    addproducts:(req, res) => {
             res.render('admin/addproducts')
 
         },
@@ -41,21 +40,9 @@ module.exports = {
         }
 
         await product.insertMany(data)
+        res.redirect('/admin/addproducts')
     },
-    // allorders:async (req,res)=>{
-    //     const orders =await orderH.findorder()
-    //     const Ordid=orders.orderid
-    //     console.log(Ordid);
-
-    //     const product =await orderH.populateproduct(Ordid)
-
-
-
-
-
-    //     res.render('admin/allorders',{orders,product})
-
-    // }
+    
     allorders: async (req, res) => {
 
         const orders = await orderH.findorder();
@@ -65,11 +52,9 @@ module.exports = {
     },
     productdetail: async (req, res) => {
         const id = req.params.id
-        console.log('hfdah', id);
         const productid = await orderH.productdetail(id)
         const product = await productH.findingproducts(productid)
 
-        console.log('sghdgay', product);
 
 
         res.render('admin/productdetails', { product })
@@ -137,24 +122,9 @@ module.exports = {
         await userH.delete(userid)
         res.redirect('/admin/allusers')
     },
-    mail: async (email, name) => {
-        var transporter = nodemailer.createTransport({
-          service: "gmail",
-          auth: {
-            user: process.env.EMAIL_ID,
-            pass: process.env.EMAIL_PASS,
-          },
-        });
-        var mailOptions = {
-          from: "akashkv11@gmail.com",
-          to: email,
-          subject: "Welcome " + name,
-          text: "Enjoy Your Shopping ",
-        };
-        transporter.sendMail(mailOptions, function (error, info) {});
-    },
-    forgotpassword: async (email1, password1) => {
-      await User.updateOne({ email: email1 }, { $set: { password: password1 } });
+    allproducts:async(req,res)=>{
+        const data=await productH.allproducts();
+        res.render('admin/allproducts',{data:data})
     }
 
 

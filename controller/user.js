@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt')
 
 const userH = require('../helpers/userHelper')
 const productH = require('../helpers/productHelper')
+const orderH = require('../helpers/orderHelper')
 const { request } = require('express')
 const otp = require('../config/otp')
 
@@ -336,7 +337,17 @@ module.exports = {
         const hashpassword = await bcrypt.hash(req.body.newPassword, 10)
         await userH.forgotpassword(req.body.email, hashpassword)
         res.json("success")
-      }
+      },
+      userproductdetail: async (req, res) => {
+        const id = req.params.id
+        const productid = await orderH.productdetail(id)
+        const product = await productH.findingproducts(productid)
+
+
+
+        res.render('users/productdetails', { product })
+
+    }
 
    
 

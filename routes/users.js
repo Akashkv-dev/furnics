@@ -1,6 +1,6 @@
 var express = require('express');
 const { loginpage,userAuth,signpage,signUp,logout,allproducts,viewcart,addTocart,quantityUpdate,cartItemRemove,productpage,edituser, updateuser,
-forgotpassword,sendotp,resetpassword } = require('../controller/user');
+forgotpassword,sendotp,resetpassword,userproductdetail } = require('../controller/user');
 const { checkOut,postCheckout,verifyPayment,success,findorders } = require('../controller/order');
 const isAuth =require('../middleware/isAuth');
 // const noCache=require('../middleware/noCache');
@@ -36,6 +36,8 @@ router.post('/verifypayment',isAuth,verifyPayment)
 router.get('/success',success)
 router.get('/productview/:id',isAuth,productpage)
 router.get('/myorders',isAuth,findorders)
+router.get('/product/:id',userproductdetail)
+
 
 
 
