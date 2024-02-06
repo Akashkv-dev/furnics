@@ -312,6 +312,19 @@
                 }
             });
         } 
+        else if(paymentMethod === 'cod'){
+            $.ajax({
+                url: '/users/postcheckout', 
+                method: 'POST',
+                data: $("#placeOrderBtn").serialize(),
+                success: (res) => {
+                    location.href = "/users/success"
+                },
+                error: (xhr, status, error) => {
+                    console.error("AJAX Error:", status, error);
+                }
+            });
+        }
     });
 
     function razorpay(order) {
