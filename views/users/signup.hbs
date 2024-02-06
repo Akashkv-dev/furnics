@@ -1,3 +1,9 @@
+<style>
+    .error-msg {
+  color: red;
+  font-size: 15px;
+}
+</style>
 <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 <link rel="stylesheet"
     href="https://unpkg.com/bs-brain@2.0.3/components/registrations/registration-5/assets/css/registration-5.css">
@@ -30,13 +36,13 @@
                                 </div>
                             </div>
                         </div>
-                        <form action="/users/signedIn" method="post">
+                        <form  id="myForm">
                             <div class="row gy-3 gy-md-4 overflow-hidden">
                                 <div class="col-12">
                                     <label for="firstName" class="form-label">First Name <span
                                             class="text-danger">*</span></label>
                                     <input type="text" class="form-control" name="name" id="firstName"
-                                        placeholder="First Name" pattern="[A-Za-z]+" required>
+                                        placeholder="First Name"  required>
                                 </div>
 
                                 <div class="col-12">
@@ -57,21 +63,6 @@
                                     <input type="tel" class="form-control" minlength="10" maxlength="10" name="phone" id="phone" placeholder="Phone"
                                         required>
                                 </div>
-                                {{!-- <div class="col-12">
-                                    <label for="inputAddress" class="form-label">Address <span
-                                            class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="address" id="inputAddress"
-                                        placeholder="Address (Area and Street)" required>
-                                </div>
-                                <div class="col-12">
-                                    <label for="inputCity">City <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="city" id="inputCity" required>
-                                </div>
-
-                                <div class=" col-4">
-                                    <label for="inputZip">Zip <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="zip" id="inputZip" required>
-                                </div> --}}
                                 <div class="col-12">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value="" name="iAgree"
@@ -90,7 +81,7 @@
                             </div>
                         </form>
                         <div>
-                            <p style="display:flex; justify-content:center; color:red;">{{invalid}}</p>
+                            <p id="showmsg" style="display:flex; justify-content:center; color:red;">{{invalid}}</p>
                         </div>
                         <div class="row">
                             <div class="col-12">
@@ -136,3 +127,42 @@
         </div>
     </div>
 </section>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('#myForm').submit(function(e) {
+      e.preventDefault(); // Prevent default form submission
+
+      // Serialize form data
+      const formData = $(this).serialize();
+
+      // Send form data to backend
+      $.ajax({
+        type: 'POST',
+        url: '/users/signedIn',
+        data: formData,
+        success: function(data) {
+            console.log(data);
+          if (data.error) {
+            // Handle validation errors
+            $('#firstName').siblings('.error-msg').remove(); // Remove any existing error messages
+          $('#firstName').after(`<p class="error-msg">${data.error}</p>`); // Append error message
+          }else if(data.invalid){
+            $('#showmsg').text(data.invalid);
+          }
+           else {
+            // Continue with success scenario
+            console.log('Form submitted successfully');
+            window.location.href = '/users/login';
+           }
+        },
+        error: function(xhr, status, error) {
+          console.error('Error submitting form:', error);
+        }
+      });
+    });
+
+   
+  });
+</script>

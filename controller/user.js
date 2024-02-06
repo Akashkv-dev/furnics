@@ -1,6 +1,7 @@
 const adminkey = process.env.ADMINKEY;
 const adminpw = process.env.ADMINPW;
 const bcrypt = require("bcrypt");
+const mongoose = require("mongoose");
 
 const userH = require("../helpers/userHelper");
 const productH = require("../helpers/productHelper");
@@ -46,24 +47,63 @@ module.exports = {
   signpage: (req, res) => {
     res.render("users/signup");
   },
+  //   signUp: async function (req, res) {
+  //     try {
+  //       console.log(req.body);
+  //       const details = {
+  //         name: req.body.name,
+  //         email: req.body.email,
+  //         password: req.body.password,
+  //         phone: req.body.phone,
+  //       };
+  //       const hashpassword = await bcrypt.hash(req.body.password, 10);
+  //       details.password = hashpassword;
+  //       await userH.insertData(details);
+  //       res.redirect("/users/login");
+  //     } catch (error) {
+  //       console.log("existing user", error);
+  //       res.render("users/signup", { invalid: "existing user" });
+  //     }
+  //   },
+
   signUp: async function (req, res) {
-    try {
       console.log(req.body);
-      const details = {
+
+      // Check if user with the same email already exists
+      const existingUser = await userH.validUser(req.body.email);
+      console.log(existingUser);
+      if (existingUser) {
+        res.json({ invalid: "existing user"});
+
+      } else {
+
+     try{
+      // Hash password
+      const hashpassword = await bcrypt.hash(req.body.password, 10);
+      // Construct user details object
+      const userDetails = {
         name: req.body.name,
         email: req.body.email,
-        password: req.body.password,
+        password: hashpassword,
         phone: req.body.phone,
       };
-      const hashpassword = await bcrypt.hash(req.body.password, 10);
-      details.password = hashpassword;
-      await userH.insertData(details);
+      // Insert user data
+      await userH.insertData(userDetails);
+      // Redirect to login page after successful signup
       res.redirect("/users/login");
-    } catch (error) {
-      console.log("existing user", error);
-      res.render("users/signup", { invalid: "existing user" });
+     }   
+      
+     catch (error) {
+      if (error instanceof mongoose.Error.ValidationError) {
+        res.json({ error: error.message });
+      }
     }
+  }
+  
   },
+
+  // Render signup page with error message
+
   logout: (req, res) => {
     req.session.destroy();
     res.redirect("/");
