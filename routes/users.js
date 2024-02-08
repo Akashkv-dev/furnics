@@ -17,6 +17,9 @@ const {
   sendotp,
   resetpassword,
   userproductdetail,
+  otppage,
+  verifyOTP,
+  resendotp
 } = require("../controller/user");
 const {
   checkOut,
@@ -40,6 +43,9 @@ router.get("/login", loginpage);
 router.post("/signin", userAuth);
 router.get("/signup", signpage);
 router.post("/signedIn", signUp);
+router.get("/phoneotp",otppage)
+router.post("/verifyOtp",verifyOTP)
+router.get("/resendotp",resendotp)
 router.get("/logout", logout);
 router.get("/forgotpassword", forgotpassword);
 router.post("/sendotp", sendotp);

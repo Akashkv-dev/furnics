@@ -151,10 +151,10 @@
           }else if(data.invalid){
             $('#showmsg').text(data.invalid);
           }
-           else {
+           else if(data.phone) {
             // Continue with success scenario
             console.log('Form submitted successfully');
-            window.location.href = '/users/login';
+            window.location.href = '/users/phoneotp';
            }
         },
         error: function(xhr, status, error) {

@@ -6,6 +6,10 @@ module.exports = {
     var result = await User.findOne({ email: data }).lean();
     return result;
   },
+  existUser: async (Email,Phone) => {
+    var result = await User.findOne({ $or: [{email: Email},{phone:Phone}] })
+    return result;
+  },
   alluser: async () => {
     const result = await User.find({ role: "user" }).lean();
     return result;
@@ -235,4 +239,7 @@ module.exports = {
   forgotpassword: async (email1, password1) => {
     await User.updateOne({ email: email1 }, { $set: { password: password1 } });
   },
+  otpfaileddelete:async (data)=>{
+    await User.findOneAndDelete({ phone: data });
+  }
 };

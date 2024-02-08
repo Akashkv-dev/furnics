@@ -1,0 +1,189 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enter OTP Code</title>
+  <link rel="stylesheet" href="path/to/your/css/file.css">
+</head>
+<style>
+    /* Import Google font - Poppins */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #7896e7;
+}
+:where(.container, form, .input-field, header) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.container {
+  background: #fff;
+  padding: 30px 65px;
+  border-radius: 12px;
+  row-gap: 20px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+.container header {
+  height: 65px;
+  width: 65px;
+  background: #7896e7;
+  color: #fff;
+  font-size: 2.5rem;
+  border-radius: 50%;
+}
+.container h4 {
+  font-size: 1.25rem;
+  color: #333;
+  font-weight: 500;
+}
+form .input-field {
+  flex-direction: row;
+  column-gap: 10px;
+}
+.input-field input {
+  height: 45px;
+  width: 235px;
+  border-radius: 6px;
+  outline: none;
+  font-size: 1.125rem;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+.input-field input:focus {
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+}
+.input-field input::-webkit-inner-spin-button,
+.input-field input::-webkit-outer-spin-button {
+  display: none;
+}
+form button {
+  margin-top: 25px;
+  width: 100%;
+  color: #fff;
+  font-size: 1rem;
+  border: none;
+  padding: 9px 0;
+  cursor: pointer;
+  border-radius: 6px;
+  pointer-events: none;
+  background: #6e93f7;
+  transition: all 0.2s ease;
+}
+#resend-otp {
+  cursor: pointer;
+}
+.error-message {
+  color: red;
+}
+form button.active {
+  background: #7896e7;
+  pointer-events: auto;
+}
+form button:hover {
+  background: #7896e7;
+}
+input[type="text"] {
+  width: 500px; 
+  height: 45px; 
+  padding: 10px; 
+  border: 1px solid #ced4da; 
+}
+</style>
+<body>
+  <div class="container">
+    <header>
+      <i class="bx bxs-check-shield"></i>
+    </header>
+    <h4>Enter OTP Code</h4>
+    {{#if message}}
+      <p style="color: red;">{{message}}</p>
+    {{/if}}
+    
+    <div id="otp-message" class="error-message"></div>
+
+    <form action="/users/verifyOtp" method="post">
+      <div class="input-field">
+        <input type="number" name="code" required/> 
+      </div>
+      <input type="hidden" name="phone" value="{{phone}}">
+      <div id="otp-timer">00:00</div>
+      <input class="btn btn-primary" type="submit" value="Verify OTP">
+      <br>
+      <div class="btn btn-secondary" id="resend-otp">Resend OTP</div>
+
+    </form>
+    
+
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="/script/otpuser.js" defer></script>
+  <script>
+    $(document).ready(function() {
+  var timeInSeconds = 300;
+
+  // Function to update the timer
+  function updateTimer() {
+    var minutes = Math.floor(timeInSeconds / 60);
+    var seconds = timeInSeconds % 60;
+    var displayTime =
+      (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+    $('#otp-timer').text(displayTime);
+
+    timeInSeconds--;
+
+    if (timeInSeconds < 0) {
+      $('#otp-timer').text('Time expired');
+      $('input[name^="num"]').prop('disabled', true);
+    } else {
+      setTimeout(updateTimer, 1000);
+    }
+  }
+
+  updateTimer();
+
+  $("#resend-otp").click(function() {
+    $.ajax({
+      url: "/users/resendotp",
+      method: "GET",
+      success: function(response) {
+        console.log("Resend OTP success response:", response);
+        if (response.success) {
+          $("#otp-message").html("OTP Resent Successfully ");
+        } else {
+          $("#otp-message").html("Failed to resend OTP. Please try again.");
+        }
+      },
+      error: function(response) {
+        console.log("Resend OTP request error");
+        // You can check the status code to determine the error type
+        console.log("Resend OTP request error");
+        if (response.responseJSON && response.responseJSON.success === false) {
+          
+          $("#otp-message").html("Invalid OTP");
+        } else {
+          $("#otp-message").html("An error occurred. Please try again later.");
+        }
+      }
+    });
+  });
+});
+
+
+
+      </script>
+</body>
+</html>

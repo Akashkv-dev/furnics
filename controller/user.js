@@ -2,12 +2,18 @@ const adminkey = process.env.ADMINKEY;
 const adminpw = process.env.ADMINPW;
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const verifySid = process.env.VERIFY_SID;
+const client = require("twilio")(accountSid, authToken);
 
 const userH = require("../helpers/userHelper");
 const productH = require("../helpers/productHelper");
 const orderH = require("../helpers/orderHelper");
 const { request } = require("express");
 const otp = require("../config/otp");
+const {sentOTP}=require('../config/phoneOtp');
+const { verify } = require("crypto");
 
 module.exports = {
   loginpage: (req, res) => {
@@ -67,42 +73,112 @@ module.exports = {
   //   },
 
   signUp: async function (req, res) {
+    const { name, email, password, phone } = req.body;
+    try {
       console.log(req.body);
-
-      // Check if user with the same email already exists
-      const existingUser = await userH.validUser(req.body.email);
-      console.log(existingUser);
+      
+  
+      // Check if user with the same email or phone already exists
+      const existingUser = await userH.existUser(email, phone);
       if (existingUser) {
-        res.json({ invalid: "existing user"});
-
-      } else {
-
-     try{
+        return res.json({ invalid: "existing Email or Phone" });
+      }
+  
       // Hash password
-      const hashpassword = await bcrypt.hash(req.body.password, 10);
+      const hashpassword = await bcrypt.hash(password, 10);
+  
       // Construct user details object
       const userDetails = {
-        name: req.body.name,
-        email: req.body.email,
+        name: name,
+        email: email,
         password: hashpassword,
-        phone: req.body.phone,
+        phone: phone,
       };
-      // Insert user data
-      await userH.insertData(userDetails);
-      // Redirect to login page after successful signup
-      res.redirect("/users/login");
-     }   
+  
+      // Save user details in session
       
-     catch (error) {
-      if (error instanceof mongoose.Error.ValidationError) {
-        res.json({ error: error.message });
-      }
+      await userH.insertData(userDetails);
+      req.session.data = userDetails;
+      console.log(req.session.data);
+
+    } catch (error) {
+      console.error( error);
+      return res.json({ error:"name should atleast 4 characters long"});
+    }
+    if(req.session.data){
+      // Send OTP
+    const otpData = await sentOTP(phone);
+    console.log("OTP sent:", otpData.phone);
+    return res.json({ phone: otpData.phone, message: "" });
+
     }
   }
-  
-  },
+  ,
 
-  // Render signup page with error message
+  otppage:async (req,res)=>{
+    const phone = req.session.data.phone;
+    console.log("phone number:",phone);
+    await userH.otpfaileddelete(phone);
+
+    res.render('users/otp',{phone:phone})
+
+  },
+  
+  verifyOTP: async function (req, res) {
+    const otpDigits = req.body.code; // Correctly extract OTP digits
+    const phone = req.body.phone;
+    console.log("phone number:", phone);
+
+    try {
+        const verifiedResponse = await client.verify.v2
+            .services(verifySid)
+            .verificationChecks.create({
+                to: `+91${phone}`,
+                code: otpDigits
+            });
+        console.log(verifiedResponse.status);
+        if (verifiedResponse.status === "approved") {
+            console.log("otp verification successful");
+            const { name, email, password, phone } = req.session.data;
+
+            const userdata = {
+                name: name,
+                email: email,
+                password: password,
+                phone: phone,
+            }
+            const verify = true
+            if(verify === true){
+              await userH.insertData(userdata);
+              res.redirect('/users/login');
+            }
+        } else {
+            const verify =false
+            // Handle if verification status is not approved
+            console.log("OTP verification failed");
+            res.render('users/otp', {phone:phone, message: "OTP verification failed" });
+            
+        }
+    } catch (error) {
+        // Handle error from Twilio
+        console.error(error);
+        res.json({ error: "Internal Server Error" });
+    }
+},
+//resend otp
+ resendotp : async (req, res) => {
+  try {
+    const phone = req.session.data.phone;
+    console.log(phone + "resending");
+
+    const data = await sentOTP(phone);
+
+    console.log(data.phone + "resended successfully");
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ success: false, error: "Failed to resend OTP" });
+  }
+},
 
   logout: (req, res) => {
     req.session.destroy();
