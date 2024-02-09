@@ -32,14 +32,8 @@ module.exports = {
       const currentPassword = await bcrypt.compare(
         req.body.password,
         valid.password
-      );
-      console.log(currentPassword);
-      console.log(req.body);
-      console.log(adminkey, adminpw);
-      if (adminkey == req.body.email && adminpw == req.body.password) {
-        res.redirect("/admin/dashboard");
-        console.log(req.body.email);
-      } else if (currentPassword) {
+      )
+       if (currentPassword) {
         req.session.userId = valid._id;
         req.session.loggedIn = true;
         console.log("User logged in");
@@ -53,25 +47,6 @@ module.exports = {
   signpage: (req, res) => {
     res.render("users/signup");
   },
-  //   signUp: async function (req, res) {
-  //     try {
-  //       console.log(req.body);
-  //       const details = {
-  //         name: req.body.name,
-  //         email: req.body.email,
-  //         password: req.body.password,
-  //         phone: req.body.phone,
-  //       };
-  //       const hashpassword = await bcrypt.hash(req.body.password, 10);
-  //       details.password = hashpassword;
-  //       await userH.insertData(details);
-  //       res.redirect("/users/login");
-  //     } catch (error) {
-  //       console.log("existing user", error);
-  //       res.render("users/signup", { invalid: "existing user" });
-  //     }
-  //   },
-
   signUp: async function (req, res) {
     const { name, email, password, phone } = req.body;
     try {

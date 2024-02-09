@@ -4,8 +4,30 @@ const path = require("path");
 const orderH = require("../helpers/orderHelper");
 const productH = require("../helpers/productHelper");
 const userH = require("../helpers/userHelper");
+const adminH = require("../helpers/adminHelper")
 const nodemailer = require("nodemailer");
 module.exports = {
+  login:(req,res)=>{
+    res.render("admin/adminLogin")
+  },
+  adminSignin:async (req,res)=>{
+    const email = req.body.email;
+    const password = req.body.password;
+    const admin = await adminH.findAdmin(email);
+    console.log(admin);
+    if (admin) {
+        if (admin.email === email && admin.password === password) {
+          req.session.admin = admin;
+          req.session.adminloggedIn = true;
+          res.redirect("/admin/dashboard");
+        } else {
+          res.redirect("/admin/admin");
+        }
+     
+    } else {
+      res.redirect("/admin/admin");
+    }
+  },
   dashboard: (req, res) => {
     res.render("admin/admin");
   },
@@ -13,6 +35,7 @@ module.exports = {
     res.render("admin/addproducts");
   },
   adminlogout: (req, res) => {
+    req.session.destroy();
     res.redirect("/");
     console.log("logout");
   },
@@ -71,27 +94,27 @@ module.exports = {
     const users = await userH.alluser();
     res.render("admin/allusers", { users });
   },
-  edituser: async (req, res) => {
-    const userid = req.params.id;
-    const data = await userH.findedituserbyid(userid);
-    console.log(data);
+  // edituser: async (req, res) => {
+  //   const userid = req.params.id;
+  //   const data = await userH.findedituserbyid(userid);
+  //   console.log(data);
 
-    res.render("admin/edituser", { data: data });
-  },
-  updateuser: async (req, res) => {
-    const userid = req.params.id;
-    const datas = {
-      name: req.body.name,
-      email: req.body.email,
-      password: req.body.password,
-      phone: req.body.phone,
-      address: req.body.address,
-      city: req.body.city,
-    };
-    console.log(datas);
-    await userH.insertupdate(datas, userid);
-    res.redirect("/admin/allusers");
-  },
+  //   res.render("admin/edituser", { data: data });
+  // },
+  // updateuser: async (req, res) => {
+  //   const userid = req.params.id;
+  //   const datas = {
+  //     name: req.body.name,
+  //     email: req.body.email,
+  //     password: req.body.password,
+  //     phone: req.body.phone,
+  //     address: req.body.address,
+  //     city: req.body.city,
+  //   };
+  //   console.log(datas);
+  //   await userH.insertupdate(datas, userid);
+  //   res.redirect("/admin/allusers");
+  // },
 
   deleteuser: async (req, res) => {
     const userid = req.params.id;
