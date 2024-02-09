@@ -15,8 +15,8 @@ const {
   deliverorder,
   cancelorder,
   allusers,
-  edituser,
-  updateuser,
+  //edituser,
+  //updateuser,
   deleteuser,
   allproducts,
   adminSignin

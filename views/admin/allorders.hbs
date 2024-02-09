@@ -1,29 +1,27 @@
+<style>
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
 
+  th,
+  td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
 
-  <style>
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-
-    th, td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      text-align: left;
-    }
-
-    th {
-      background-color: #f2f2f2;
-    }
-  </style>
+  th {
+    background-color: #f2f2f2;
+  }
+</style>
 
 {{> adminheader}}
 
 <body>
-
-
-  <h2>All Orders</h2>
+  <section class="px-3">
+    <h2>All Orders</h2>
 
   <table>
     <thead>
@@ -37,30 +35,38 @@
       </tr>
     </thead>
     <tbody>
-        {{#each orders}}
-        <tr>
-          <td>{{this.name}}</td>    
-          <td><a href="/admin/product/{{this._id}}">Product details</a></td>              
-          <td>{{this.orderid}}</td>
-          <td>{{this.totalprice}}</td>
-          <td>{{this.status}}</td>
-          <td>
-                            <div class="dropdown">
-                                <button class="btn btn-outline-secondary dropdown-toggle" type="button"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    More
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" href="/admin/confirm/{{_id}}">Confirm</a>
-                                    <a class="dropdown-item" href="/admin/shipped/{{_id}}"> Shipped</a>
-                                    <a class="dropdown-item" href="/admin/delivered/{{_id}}"> Delivered</a>
-                                    <a class="dropdown-item" href="/admin/cancelled/{{_id}}"> Cancelled</a>
-                                </div>
-                            </div>
-                        </td>
-        </tr>
+      {{#each orders}}
+      <tr>
+        <td>{{this.name}}</td>
+        <td><a href="/admin/product/{{this._id}}">Product details</a></td>
+        <td>{{this.orderid}}</td>
+        <td>{{this.totalprice}}</td>
+        <td>{{this.status}}</td>
+        <td>
+          <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              More
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item" href="#" onclick="confirmAction('/admin/confirm/{{_id}}')">Confirm</a>
+              <a class="dropdown-item" href="#" onclick="confirmAction('/admin/shipped/{{_id}}')">Shipped</a>
+              <a class="dropdown-item" href="#" onclick="confirmAction('/admin/delivered/{{_id}}')">Delivered</a>
+              <a class="dropdown-item" href="#" onclick="confirmAction('/admin/cancelled/{{_id}}')">Cancelled</a>
+            </div>
+
+          </div>
+        </td>
+      </tr>
       {{/each}}
   </table>
+  </section>
+  <script>
+    function confirmAction(url) {
+      if (confirm("Are you sure you want to perform this action?")) {
+        window.location.href = url;
+      }
+    }
 
+  </script>
 </body>
-

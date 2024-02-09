@@ -79,47 +79,63 @@ module.exports = {
     return productid;
   },
   confirm: async (data) => {
-    await Order.findOneAndUpdate(
-      { _id: data },
-      {
-        $set: {
-          status: "Confirm",
-        },
-      },
-      { new: true }
-    );
-  },
-  shipped: async (data) => {
-    await Order.findOneAndUpdate(
-      { _id: data },
-      {
-        $set: {
-          status: "Shipped",
-        },
-      },
-      { new: true }
-    );
-  },
-  delivered: async (data) => {
-    await Order.findOneAndUpdate(
-      { _id: data },
-      {
-        $set: {
-          status: "Delivered",
-        },
-      },
-      { new: true }
-    );
-  },
-  cancelled: async (data) => {
-    await Order.findOneAndUpdate(
-      { _id: data },
-      {
-        $set: {
-          status: "Cancelled",
-        },
-      },
-      { new: true }
-    );
-  },
+    const order = await Order.findById(data);
+    if (order.status === "placed") {
+        return await Order.findOneAndUpdate(
+          { _id: data },
+          { $set: { status: "Confirm" } },
+          { new: true }
+        );
+    }
+    else{
+      return null; // or throw an error indicating invalid status transition
+
+    }
+},
+
+shipped: async (data) => {
+    const order = await Order.findById(data);
+    if (order.status === "Confirm") {
+        return await Order.findOneAndUpdate(
+          { _id: data },
+          { $set: { status: "Shipped" } },
+          { new: true }
+        );
+    }
+    else{
+      return null; // or throw an error indicating invalid status transition
+
+    }
+},
+
+delivered: async (data) => {
+    const order = await Order.findById(data);
+    if (order.status === "Shipped") {
+        return await Order.findOneAndUpdate(
+          { _id: data },
+          { $set: { status: "Delivered" } },
+          { new: true }
+        );
+    }
+    else{
+      return null; // or throw an error indicating invalid status transition
+
+    }
+},
+
+cancelled: async (data) => {
+    const order = await Order.findById(data);
+    if (order.status !== "Delivered" && order.status !== "Cancelled") {
+        return await Order.findOneAndUpdate(
+          { _id: data },
+          { $set: { status: "Cancelled" } },
+          { new: true }
+        );
+    }
+    else{
+      return null; // or throw an error indicating invalid status transition
+
+    }
+}
+
 };
