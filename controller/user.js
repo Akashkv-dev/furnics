@@ -1,5 +1,3 @@
-const adminkey = process.env.ADMINKEY;
-const adminpw = process.env.ADMINPW;
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
@@ -166,6 +164,8 @@ module.exports = {
     const isUser = req.session.loggedIn;
     res.render("users/allproducts", { prodata, isUser });
   },
+
+  // cart
   viewcart: async (req, res) => {
     const userid = req.session.userId;
     const cartProduct = await userH.findProduct(userid);
@@ -176,15 +176,16 @@ module.exports = {
         const cartCount = cartItems.length;
         console.log("cartCount", cartCount);
 
-        const sum = cartItems.reduce(
+        const sum1 = cartItems.reduce(
           (sum, item) => sum + item.quantity * item.productId.price,
           0
         );
-        const totalSum = sum + 5;
+        console.log("sum", sum1);
+        const totalSum = sum1 + 5;
 
         console.log(totalSum);
 
-        res.render("users/cart", { cartItems, sum, totalSum, cartCount });
+        res.render("users/cart", { cartItems:cartItems, totalSum:totalSum, cartCount:cartCount ,sum1:sum1});
       } catch (error) {
         console.error("product not found", error);
       }
@@ -407,4 +408,56 @@ module.exports = {
 
     res.render("users/productdetails", { product });
   },
+  addtoWishlist:async (req,res)=>{
+   const  productId=req.params.id;
+    const userId=req.session.userId;
+    try {
+      existingItem =await userH.findwishlist(userId,productId);
+      if(existingItem){
+        const Remove = await userH.removeItemfromWishlist(userId,productId);
+        res.json({success:false});
+    }
+    else{
+      let wishlist = await userH.findwishlistUser(userId);
+      if(!wishlist){
+        wishlist = userH.createemptyWishlist(userId);
+      }
+      wishlist.products.push(productId);
+      await wishlist.save();
+      res.json({success:true});
+    }
+        
+    } catch (error) {
+      console.error("wishlist error",error);
+    }
+
+  },
+  wishlist:async (req,res)=>{
+    const isUser = req.session.loggedIn;
+    const userId=req.session.userId;
+    const wishlist = await userH.findingwishlistProducts(userId);
+    console.log(wishlist);
+    if(!wishlist || wishlist.products.length === 0){
+      res.render('users/wishlist',{wishlist:[],isUser:isUser});
+    }
+    else{
+      res.render("users/wishlist",{wishlist:wishlist.products,isUser:isUser});
+    }
+  },
+  deleteWishlist:async (req,res)=>{
+    try {
+      const userId = req.session.userId;
+      const productId =req.body.productId
+      const removeItem = await userH.removeItemfromWishlist(userId,productId)
+      if(removeItem){
+        res.json({ success: false})
+      }
+      else{
+        res.json({ error: "Product not found in the wishlist" });
+      }
+
+    } catch (error) {
+      console.log("error in delete to wishlist");
+    }
+  }
 };

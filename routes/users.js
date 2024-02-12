@@ -19,7 +19,10 @@ const {
   userproductdetail,
   otppage,
   verifyOTP,
-  resendotp
+  resendotp,
+  addtoWishlist,
+  wishlist,
+  deleteWishlist
 } = require("../controller/user");
 const {
   checkOut,
@@ -65,5 +68,10 @@ router.get("/success", isAuth, success);
 router.get("/productview/:id", isAuth, productpage);
 router.get("/myorders", isAuth, findorders);
 router.get("/product/:id", userproductdetail);
+
+//wishlist
+router.get("/addtowishlist/:id",isAuth,addtoWishlist)
+router.get("/wishlist",isAuth,wishlist)
+router.post("/wishlistdelete",isAuth,deleteWishlist)
 
 module.exports = router;

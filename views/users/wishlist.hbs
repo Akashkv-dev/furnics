@@ -1,0 +1,84 @@
+{{> userheader}}
+<div class="row justify-content-center mb-3">
+  {{#if (eq wishlist.length 0)}}
+    <div class="col-md-12 mt-5" style="height: 225px;">
+      <div class="card border-rounded shadow p-5 m-4">
+        <div class="card-body">
+          <h3 class="card-title">No wishlist</h3>
+        </div>
+      </div>
+    </div>
+  {{else}}
+    {{#each wishlist}}
+      <div class="col-md-12">
+        <div class="card shadow-lg border rounded-3 p-2 m-5">
+          <div class="card-body">
+            <div class="row g-0">
+              <div class="col-xl-3 col-md-4 d-flex justify-content-center">
+                <div class="bg-image hover-zoom ripple rounded ripple-surface me-md-3 mb-3 mb-md-0">
+                  <img src="/uploads/{{this.image}}" alt="No Such Images" class="w-100" style="width: 180px; height: 196px"/>
+                  <a href="#!">
+                    <div class="hover-overlay">
+                      <div class="mask" style="background-color: rgba(253, 253, 253, 0.15);"></div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <div class="col-xl-6 col-md-5 col-sm-7">
+                <a href="/product/{{product._id}}" style="text-decoration: none;">
+                  <h4>{{this.productname}}</h4>
+                </a>
+                <br>
+                <div class="d-flex flex-row align-items-center mb-1">
+                  <h4 class="mb-1 me-1">₹{{this.price}}</h4>
+                  {{!-- <span class="text-dark" style="text-decoration: line-through;">₹{{this.price}}</span> --}}
+                </div>
+              </div>
+              <div class="col-xl-3 col-md-3 col-sm-5">
+                {{#if (gt this.quantity 0)}}
+                  <h6 class="text-success">In stock</h6>
+                {{else}}
+                  <h6 class="text-danger">Out of stock</h6>
+                {{/if}}
+                <div class="mt-4">
+                  <a href="" class="btn btn-light border px-2 pt-2  add-to-wishlist-button" data-product-id="{{this._id}}"><i class="fa-solid fa-trash fa-bounce fa-xl" style="color: #000000;"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {{/each}}
+  {{/if}}
+</div>
+<script src="https://kit.fontawesome.com/d79b7af11d.js" crossorigin="anonymous"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+  $(document).ready(function() {
+    $('.add-to-wishlist-button').click(function(event) {
+      event.preventDefault();
+      const productId = $(this).data('product-id');
+      const icon = $(this).find('.fa-heart');
+
+      $.ajax({
+        url: '/users/wishlistdelete',
+        method: 'POST',
+        data: {
+          productId: productId,
+        },
+        success: function (response) {
+          console.log(response)
+          
+            alert('Product removed from wishlist');
+            location.reload(); // Reloading the page to reflect changes
+                  
+        },
+        error: function (error) {
+          console.error('Error updating wishlist:', error);
+        }
+      });
+    });
+  });
+</script>

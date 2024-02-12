@@ -8,7 +8,7 @@ module.exports = {
     const userid = req.session.userId;
     const cartProduct = await userH.findProduct(userid);
     let totalPay = 0;
-    if (cartProduct) {
+    if (cartProduct.cart.cart.length > 0) {
       if (cartProduct.totalPrice == 0) {
         totalPay = 0;
       } else {

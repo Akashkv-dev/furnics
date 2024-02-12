@@ -9,6 +9,7 @@ const dotenv = require("dotenv").config();
 const connect = require("./config/mongoConnect");
 const multer = require("multer");
 const MongoDBStore = require("connect-mongodb-session")(session);
+const helpers = require('handlebars-helpers')();
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var adminRouter = require("./routes/admin");

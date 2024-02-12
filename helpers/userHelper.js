@@ -1,5 +1,6 @@
 const User = require("../modals/User");
 const Trash = require("../modals/Trash");
+const Wishlist = require("../modals/Wishlist");
 
 module.exports = {
   validUser: async (data) => {
@@ -241,5 +242,31 @@ module.exports = {
   },
   otpfaileddelete:async (data)=>{
     await User.findOneAndDelete({ phone: data });
+  },
+  findwishlist:async (userId,productId)=>{
+    const result = await Wishlist.findOne({user:userId,products:productId})
+    return result;
+  },
+  removeItemfromWishlist:async (userId,productId)=>{
+    const result =await Wishlist.findOneAndUpdate(
+      { user: userId },
+      { $pull: { products: productId } },
+      { new: true }
+  )
+  },
+  findwishlistUser:async (userId)=>{
+    const result = await Wishlist.findOne({user:userId})
+    return result;
+  },
+  createemptyWishlist:(userId)=>{
+    const result = new Wishlist({
+      user: userId,
+      products: []
+    });
+    return result;
+  },
+  findingwishlistProducts:async (userId)=>{
+    const result=await Wishlist.findOne({user:userId}).populate({path:"products",model:"products"}).lean()
+    return result;
   }
 };
