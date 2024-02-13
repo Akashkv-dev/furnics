@@ -7,6 +7,8 @@ module.exports = {
   checkOut: async (req, res) => {
     const userid = req.session.userId;
     const cartProduct = await userH.findProduct(userid);
+    const user =await userH.findedituserbyid(userid)
+    const address=user.address
     let totalPay = 0;
     if (cartProduct.cart.cart.length > 0) {
       if (cartProduct.totalPrice == 0) {
@@ -18,6 +20,7 @@ module.exports = {
         cart: cartProduct.cart.cart,
         totalPrice: cartProduct.totalPrice,
         totalPay,
+        address
       });
     } else {
       res.redirect("/users/cart");

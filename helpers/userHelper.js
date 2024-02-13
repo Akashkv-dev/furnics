@@ -268,5 +268,5 @@ module.exports = {
   findingwishlistProducts:async (userId)=>{
     const result=await Wishlist.findOne({user:userId}).populate({path:"products",model:"products"}).lean()
     return result;
-  }
-};
+  },
+}
