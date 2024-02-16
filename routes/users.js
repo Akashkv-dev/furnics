@@ -22,7 +22,9 @@ const {
   resendotp,
   addtoWishlist,
   wishlist,
-  deleteWishlist
+  deleteWishlist,
+  applyCoupon,
+  removeCoupon
 } = require("../controller/user");
 const {
   checkOut,
@@ -73,5 +75,9 @@ router.get("/product/:id", userproductdetail);
 router.get("/addtowishlist/:id",isAuth,addtoWishlist)
 router.get("/wishlist",isAuth,wishlist)
 router.post("/wishlistdelete",isAuth,deleteWishlist)
+
+//coupon
+router.post("/applycoupon",isAuth,applyCoupon)
+router.post("/removecoupon",isAuth,removeCoupon)
 
 module.exports = router;

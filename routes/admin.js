@@ -19,7 +19,9 @@ const {
   //updateuser,
   deleteuser,
   allproducts,
-  adminSignin
+  adminSignin,
+  coupon,
+  addCoupon
 } = require("../controller/admin.js");
 
 router.get("/admin",login)
@@ -39,5 +41,9 @@ router.get("/allusers",adminAuth, allusers);
 // router.post("/updateuser/:id", updateuser);
 router.get("/deleteuser/:id",adminAuth, deleteuser);
 router.get("/allproducts",adminAuth, allproducts);
+
+//coupon
+router.get("/coupon",adminAuth, coupon);
+router.post("/addcoupon",adminAuth, addCoupon);
 
 module.exports = router;

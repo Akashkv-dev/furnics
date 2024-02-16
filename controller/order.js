@@ -1,6 +1,7 @@
 const razorpay = require("../config/razorpay");
 const orderH = require("../helpers/orderHelper");
 const userH = require("../helpers/userHelper");
+const adminH =require("../helpers/adminHelper")
 const crypto = require("crypto");
 
 module.exports = {
@@ -9,19 +10,43 @@ module.exports = {
     const cartProduct = await userH.findProduct(userid);
     const user =await userH.findedituserbyid(userid)
     const address=user.address
+    const coupon = await adminH.findCouponByCode(user.couponCode);
+    const coupons =await adminH.findCoupon()
+    const disprice = coupon ? coupon.amount : 0;
     let totalPay = 0;
+    
     if (cartProduct.cart.cart.length > 0) {
       if (cartProduct.totalPrice == 0) {
         totalPay = 0;
       } else {
         totalPay = cartProduct.totalPrice + 5;
       }
-      res.render("users/checkout", {
-        cart: cartProduct.cart.cart,
-        totalPrice: cartProduct.totalPrice,
-        totalPay,
-        address
-      });
+      if(user.coupon == "applied"){
+        console.log("coupon",coupon.couponCode);
+        totalPay = totalPay - disprice
+        console.log("garnd total",totalPay);
+        res.render("users/checkout", {
+          cart: cartProduct.cart.cart,
+          totalPrice: cartProduct.totalPrice,
+          applied: true,
+          totalPay,
+          address,
+          coupons,
+          coupon,
+          disprice
+        });
+
+      }
+      else{
+        res.render("users/checkout", {
+          cart: cartProduct.cart.cart,
+          totalPrice: cartProduct.totalPrice,
+          applied: false,
+          totalPay,
+          address,
+          coupons
+        });
+      }
     } else {
       res.redirect("/users/cart");
       console.log("cartData not found");
@@ -35,6 +60,8 @@ module.exports = {
     const timestamp = Date.now();
     const randomNum = Math.floor(Math.random() * 1000);
     const orderId = `ORD-${timestamp}-${randomNum}`;
+    const price = req.body.price
+    console.log("ajaxprice",price);
 
     try {
       if (user) {
@@ -51,7 +78,7 @@ module.exports = {
           state: req.body.state,
           cart: Cart,
           status: "pending",
-          totalprice: user.totalPrice + 5,
+          totalprice: price,
           paymentid: "null",
           paymentmethod: req.body.paymentOption,
         };
@@ -65,11 +92,9 @@ module.exports = {
         }
         else
         if (req.body.paymentOption === "razorpay") {
-          var order = await razorpay.payment(orderId, orderDetails.totalprice);
+          var order = await razorpay.payment(orderId, price);
           await orderH.addOrder(orderDetails);
           res.json(order);
-
-
         }
 
         const newAddress = {
@@ -111,6 +136,7 @@ module.exports = {
     if (digest === signature) {
       console.log("payment successful");
       orderH.updatestatus(orderID, paymentId);
+      userH.updateSuccesscoupon(userid)
       orderH.deleteCartorderd(userid);
       res.json("success");
     } else {

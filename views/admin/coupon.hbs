@@ -1,0 +1,169 @@
+{{> adminheader}}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coupon Management</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<style>
+    .container {
+            display: flex;
+            justify-content: center;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+    .coupons-list,
+    .add-coupon {
+        width: 48%;
+       }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"] {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    button[type="submit"],
+    .editCoupon,
+    .deleteCoupon {
+        background-color: #4CAF50;
+        color: white;
+        padding: 8px 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-left: 5px;
+    }
+
+    .left-panel {
+        flex: 1;
+        padding: 20px;
+        border-right: 1px solid #ccc;
+    }
+
+    .right-panel {
+        flex: 1;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    button[type="submit"]:hover,
+    .editCoupon:hover,
+    .deleteCoupon:hover {
+        background-color: #45a049;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <div class="left-panel">
+        <div id="couponsList">
+            <h2>Coupons</h2>
+            <ul>
+                {{#each coupon}}
+                <li>
+                    <strong>{{this.couponName}}</strong> - {{this.couponCode}} | Amount: {{this.amount}} | Start Date:
+                    {{this.startDate}} | Expiry Date: {{this.expiryDate}}<br>
+                    <button class="editCoupon" data-id="{{this._id}}">Edit</button>
+                    <button class="deleteCoupon" data-id="{{this._id}}">Delete</button>
+                </li>
+                {{/each}}
+            </ul>
+        </div>
+        </div>
+        <div class="right-panel">
+        <div class="add-coupon">
+            <h2>Add Coupon</h2>
+            <form id="couponForm" action=" " method="POST">
+                <div class="form-group">
+                    <label for="couponName">Coupon Name:</label>
+                    <input type="text" id="couponName" name="couponName" required>
+                </div>
+                <div class="form-group">
+                    <label for="couponCode">Coupon Code:</label>
+                    <input type="text" id="couponCode" name="couponCode" required>
+                </div>
+                <div class="form-group">
+                    <label for="amount">Amount:</label>
+                    <input type="number" id="amount" name="amount" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="startDate">Start Date:</label>
+                    <input type="datetime-local" id="startDate" name="startDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="expiryDate">Expiry Date:</label>
+                    <input type="datetime-local" id="expiryDate" name="expiryDate" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit">Add Coupon</button>
+                </div>
+            </form>
+        </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#couponForm').submit(function (event) {
+                event.preventDefault();
+                var formData = $(this).serialize();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/admin/addcoupon',
+                    data: formData, // Corrected sending of formData
+                    success: function (response) {
+                        console.log(response);
+                        window.location.href = '/admin/coupon';
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Error adding coupon.');
+                    }
+                });
+            });
+
+            // Add event listener for edit button
+            $('.editCoupon').click(function () {
+                var couponId = $(this).data('id');
+                // Handle edit coupon action
+                // You may open a modal or redirect to an edit page
+                alert('Edit coupon with ID: ' + couponId);
+            });
+
+            // Add event listener for delete button
+            $('.deleteCoupon').click(function () {
+                var couponId = $(this).data('id');
+                // Handle delete coupon action
+                // You may ask for confirmation and then delete the coupon via AJAX
+                alert('Delete coupon with ID: ' + couponId);
+            });
+        }
+
+    );
+    </script>
+
+</body>
+
+</html>

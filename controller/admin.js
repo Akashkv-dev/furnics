@@ -6,6 +6,7 @@ const productH = require("../helpers/productHelper");
 const userH = require("../helpers/userHelper");
 const adminH = require("../helpers/adminHelper")
 const nodemailer = require("nodemailer");
+const { log } = require("console");
 module.exports = {
   login:(req,res)=>{
     res.render("admin/adminLogin")
@@ -136,4 +137,36 @@ module.exports = {
     const data = await productH.allproducts();
     res.render("admin/allproducts", { data: data });
   },
+  coupon: async (req, res) => {
+    try {
+      const coupons = await adminH.findCoupon();
+      // const date = new Date();
+      res.render("admin/coupon", {coupon:coupons});
+    } catch (error) {
+      console.log("error while rendering the show coupon page:",error);
+      res.render('admin/coupon', { coupons: [] });
+    }
+  },
+  addCoupon:async (req, res) => {
+    try {
+      // const {couponName,couponCode,amount,startDate,expiryDate} = req.body;
+      const coupon = {
+        couponName:req.body.couponName,
+        couponCode:req.body.couponCode,
+        amount:req.body.amount,
+        startDate:req.body.startDate,
+        expiryDate:req.body.expiryDate
+      }
+      const existingCoupon = await adminH.findCouponByCode(coupon.couponCode);
+      if(existingCoupon){
+        res.json({success:false,message:"Coupon already exists!"});
+      }
+      else{
+        await adminH.insertCoupon(coupon);
+        res.json({success:true,message:"Coupon added successfully!"});
+      }
+   } catch (error) {
+      console.error('Error while adding coupon:',error);
+    }
+  }
 };

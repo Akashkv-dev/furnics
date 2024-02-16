@@ -43,8 +43,18 @@ const userSchema = new mongoose.Schema({
         required: true,
         // default:0
       },
+      
     },
   ],
+  couponCode:{
+    type: String,
+    default:"null",
+    required: true,
+  },
+  coupon:{
+    type: String,
+    default:"null"
+  },
   address: [
     {
       name: {

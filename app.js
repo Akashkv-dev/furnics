@@ -10,6 +10,7 @@ const connect = require("./config/mongoConnect");
 const multer = require("multer");
 const MongoDBStore = require("connect-mongodb-session")(session);
 const helpers = require('handlebars-helpers')();
+const timeformat = require("./hbsHelper/handlebarHelpers")
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var adminRouter = require("./routes/admin");
@@ -23,7 +24,19 @@ const hbs = exphbs.create({
   defaultLayout: "layout",
   layoutsDir: path.join(__dirname, "views/layouts"),
   partialsDir: path.join(__dirname, "views/partials"),
+  helpers: {
+    eq: function (arg1, arg2) {
+      return arg1 === arg2;
+    },
+    gt: function (arg1, arg2) {
+      return arg1 > arg2;
+    },
+    includes: function (array, value) {
+      return array.includes(value);
+    }
+  }
 });
+
 
 app.engine("hbs", hbs.engine);
 app.set("view engine", "hbs");

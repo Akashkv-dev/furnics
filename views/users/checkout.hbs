@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
 <style>
   .text-font {
     font-family: futura-pt, Tahoma, Geneva, Verdana, Arial, sans-serif;
@@ -151,7 +152,7 @@
 
                           <div class="col">
                             <div class="form-outline mb-4">
-                              <select id="form11Example9" class="form-select" name="state"  required>
+                              <select id="form11Example9" class="form-select" name="state" required>
                                 <option value="" disabled selected>Select your state</option>
                                 <option value="Andhra Pradesh">Andhra Pradesh</option>
                                 <option value="Arunachal Pradesh">Arunachal Pradesh</option>
@@ -215,7 +216,7 @@
                 </div>
 
                 <div class="col-md-6 ms-3">
-                  <span class="mb-0 text-price">${{this.price}}</span>
+                  <span class="mb-0 text-price">₹{{this.price}}</span>
                   <p class="mb-0 text-descriptions">{{this.productId.productname}} </p>
                   {{!-- <span class="text-descriptions fw-bold">Black</span> <span class="text-descriptions fw-bold">UK
                     8</span> --}}
@@ -231,10 +232,38 @@
                     Subtotal
                     <span>₹{{totalPrice}}</span>
                   </li>
+                  <li class="text-muted">
+                    <h4>redeem now</h4>
+                    {{#if applied}}
+                    <div class="coupon">
+                      {{coupon.couponCode}}-{{coupon.amount}}/-flat discount -
+                      <a class="applyCoupon" data-coupon-code="{{coupon.couponCode}}">Applied </a><span class="removeCoupon" href="" data-coupon-code="{{coupon.couponCode}}"><i
+                          class="ti ti-x"></i></span>
+                      <span class="appliedText" style="display:none;">Applied <span class="removeCoupon" href="" data-coupon-code="{{coupon.couponCode}}"><i
+                          class="ti ti-x"></i></span></span>
+                      
+                    </div>
+                    {{else}}
+                    {{#each coupons}}
+                    <div class="coupon">
+                      {{this.couponCode}}-{{this.amount}}/-flat discount -
+                      <a href="" class="applyCoupon" data-coupon-code="{{this.couponCode}}">Apply</a>
+                      <span class="appliedText" style="display:none;">Applied <span class="removeCoupon" data-coupon-code="{{this.couponCode}}"><i class="ti ti-x"></i></span></span>
+                      
+                    </div>
+                    {{/each}}
+                    {{/if}}
+                  </li>
+                  <li
+                    class="list-group-item d-flex justify-content-between align-items-center px-0 fw-bold text-uppercase">
+                    Discount
+                    <span>₹<span id="disprice">{{disprice}}</span></span>
+                  </li>
+
                   <li
                     class="list-group-item d-flex justify-content-between align-items-center px-0 fw-bold text-uppercase">
                     Total to pay
-                    <span>₹{{totalPay}}</span>
+                    <span>₹<span id="totalprice">{{totalPay}}</span></span>
                   </li>
                 </ul>
               </div>
@@ -341,11 +370,14 @@
       e.preventDefault();
       var paymentMethod = $("input[name='paymentOption']:checked").val();
       console.log(paymentMethod)
+      const price = $("#totalprice").text();
       if (paymentMethod === 'razorpay') {
+        var formData = $("#placeOrderBtn").serialize();
+        formData += '&price=' + price;
         $.ajax({
           url: '/users/postcheckout',
           method: 'POST',
-          data: $("#placeOrderBtn").serialize(),
+          data: formData,
           success: (res) => {
             razorpay(res)
           },
@@ -355,10 +387,12 @@
         });
       }
       else if (paymentMethod === 'cod') {
+        var formData = $("#placeOrderBtn").serialize();
+        formData += '&price=' + price;
         $.ajax({
           url: '/users/postcheckout',
           method: 'POST',
-          data: $("#placeOrderBtn").serialize(),
+          data: formData,
           success: (res) => {
             location.href = "/users/success"
           },
@@ -372,7 +406,7 @@
     function razorpay(order) {
       var options = {
         "key": "rzp_test_PTrEWw4jwtJptK", // Enter the Key ID generated from the Dashboard
-        "amount": order.amount * 100 * 83, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        "amount": order.amount * 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
         "currency": "INR",
         "name": "Furnics",
         "description": "Test Transaction",
@@ -418,36 +452,107 @@
   </script>
 
   <script>
-  function toggleAddressForm(index) {
-    var selectedAddress = document.getElementById('addressOption' + index);
-    var newAddressForm = document.getElementById('newAddressForm');
-    if (selectedAddress.checked) {
-      // Populate the form fields with the selected address details
-      document.getElementById('form11Example1').value = selectedAddress.dataset.name;
-      document.getElementById('form11Example6').value = selectedAddress.dataset.phone;
-      document.getElementById('form11Example3').value = selectedAddress.dataset.pincode;
-      document.getElementById('form11Example4').value = selectedAddress.dataset.landmark;
-      document.getElementById('form11Example7').value = selectedAddress.dataset.address;
-      document.getElementById('form11Example5').value = selectedAddress.dataset.city;
-      document.getElementById('form11Example9').value = selectedAddress.dataset.state;
+    function toggleAddressForm(index) {
+      var selectedAddress = document.getElementById('addressOption' + index);
+      var newAddressForm = document.getElementById('newAddressForm');
+      if (selectedAddress.checked) {
+        // Populate the form fields with the selected address details
+        document.getElementById('form11Example1').value = selectedAddress.dataset.name;
+        document.getElementById('form11Example6').value = selectedAddress.dataset.phone;
+        document.getElementById('form11Example3').value = selectedAddress.dataset.pincode;
+        document.getElementById('form11Example4').value = selectedAddress.dataset.landmark;
+        document.getElementById('form11Example7').value = selectedAddress.dataset.address;
+        document.getElementById('form11Example5').value = selectedAddress.dataset.city;
+        document.getElementById('form11Example9').value = selectedAddress.dataset.state;
 
-      // Hide the new address form
-      newAddressForm.style.display = 'none';
-    } else {
-      // Clear the form fields
-      document.getElementById('form11Example1').value = '';
-      document.getElementById('form11Example6').value = '';
-      document.getElementById('form11Example3').value = '';
-      document.getElementById('form11Example4').value = '';
-      document.getElementById('form11Example7').value = '';
-      document.getElementById('form11Example5').value = '';
-      document.getElementById('form11Example9').value = '';
+        // Hide the new address form
+        newAddressForm.style.display = 'none';
+      } else {
+        // Clear the form fields
+        document.getElementById('form11Example1').value = '';
+        document.getElementById('form11Example6').value = '';
+        document.getElementById('form11Example3').value = '';
+        document.getElementById('form11Example4').value = '';
+        document.getElementById('form11Example7').value = '';
+        document.getElementById('form11Example5').value = '';
+        document.getElementById('form11Example9').value = '';
 
-      // Show the new address form
-      newAddressForm.style.display = 'block';
+        // Show the new address form
+        newAddressForm.style.display = 'block';
+      }
     }
-  }
+  </script>
+ <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var applyButtons = document.querySelectorAll('.applyCoupon');
+
+    applyButtons.forEach(function (button) {
+      button.addEventListener('click', function (event) {
+        event.preventDefault();
+        var couponCode = button.dataset.couponCode;
+
+        // AJAX call to apply coupon
+        $.ajax({
+          type: 'POST',
+          url: '/users/applycoupon',
+          data: { couponCode: couponCode },
+          success: function (response) {
+            console.log(response);
+            // Update the price on the frontend with the response
+            if (response.success) {
+              // Hide all "applied" texts and reset buttons
+              document.querySelectorAll('.appliedText').forEach(function (appliedText) {
+                appliedText.style.display = 'none';
+              });
+              document.querySelectorAll('.applyCoupon').forEach(function (applyButton) {
+                applyButton.style.display = 'inline';
+              });
+
+              // Show "applied" text for this coupon
+              button.nextElementSibling.style.display = 'inline'; // Show the "applied" text
+              button.style.display = 'none'; // Hide the apply button
+
+              $('#totalprice').text(response.grandtotal);
+              $('#disprice').text(response.disPrice);
+            }
+            else {
+              alert(response.message);
+            }
+          },
+          error: function (xhr, status, error) {
+            alert('Error applying coupon.');
+          }
+        });
+      });
+    });
+  });
 </script>
+
+  <script>
+    $(document).ready(function () {
+      // Event listener for removing a coupon
+      $(document).on('click', '.removeCoupon', function (event) {
+        event.preventDefault();
+
+        var couponCode = $(this).data('coupon-code');
+
+        $.ajax({
+          type: 'POST',
+          url: '/users/removecoupon',
+          data: { couponCode: couponCode },
+          success: function (response) {
+            console.log(response);
+            window.location.reload();
+            // Update the coupon status on the client-side
+          },
+          error: function (xhr, status, error) {
+            alert('Error removing coupon.');
+          }
+        });
+      });
+    });
+
+  </script>
 
 
 

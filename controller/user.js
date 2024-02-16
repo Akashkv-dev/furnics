@@ -8,6 +8,7 @@ const client = require("twilio")(accountSid, authToken);
 const userH = require("../helpers/userHelper");
 const productH = require("../helpers/productHelper");
 const orderH = require("../helpers/orderHelper");
+const adminH = require("../helpers/adminHelper");
 const { request } = require("express");
 const otp = require("../config/otp");
 const {sentOTP}=require('../config/phoneOtp');
@@ -182,7 +183,6 @@ module.exports = {
         );
         console.log("sum", sum1);
         const totalSum = sum1 + 5;
-
         console.log(totalSum);
 
         res.render("users/cart", { cartItems:cartItems, totalSum:totalSum, cartCount:cartCount ,sum1:sum1});
@@ -458,6 +458,38 @@ module.exports = {
 
     } catch (error) {
       console.log("error in delete to wishlist");
+    }
+  },
+  applyCoupon:async (req,res)=>{
+    try {
+      const couponCode = req.body.couponCode;
+      const userId = req.session.userId;
+      const coupon =await adminH.findCouponByCode(couponCode);
+      const disPrice = coupon.amount;
+      const cart = await userH.findProduct(userId)
+      const productId =cart.cart.productId
+      if(cart.totalsum >= 10000){
+        const grandtotal = cart.totalsum - disPrice;
+        await userH.updateUsercoupon(userId,couponCode);
+
+        res.json({success:true,grandtotal,disPrice});
+
+      }
+      else{  
+        res.json({success:false,message:"Cart value should be more than 10000 to apply this coupon"});
+      }
+
+    } catch (error) {
+      console.log("coupon not applied",error);
+    }
+  },
+  removeCoupon:async (req,res)=>{
+    try {
+      const userId = req.session.userId;
+      await userH.removeUpdate(userId);
+         res.json({success:true});
+    } catch (error) {
+      console.log("error in remove coupon",error);
     }
   }
 };

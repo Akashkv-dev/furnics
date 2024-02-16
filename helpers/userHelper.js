@@ -72,12 +72,15 @@ module.exports = {
 
     if (cart.cart) {
       let totalPrice = 0;
+      let totalsum;
       for (const cartItem of cart.cart) {
         if (cartItem.productId && cartItem.productId.price) {
           totalPrice += cartItem.quantity * cartItem.productId.price;
+           totalsum= totalPrice + 5
+
         }
       }
-      return { cart, totalPrice };
+      return { cart, totalPrice ,totalsum};
     } else {
       return { cart };
     }
@@ -269,4 +272,40 @@ module.exports = {
     const result=await Wishlist.findOne({user:userId}).populate({path:"products",model:"products"}).lean()
     return result;
   },
+  updateUsercoupon:async (userId,couponcode)=>{
+    console.log(userId);
+    const result = await User.findOneAndUpdate(
+      {_id:userId},
+      {
+        $set:{
+          "couponCode":couponcode,
+          "coupon":"applied"
+        }
+      },
+      {new: true})
+      console.log(result);
+  },
+  updateSuccesscoupon:async (userId)=>{
+    console.log(userId);
+    const result = await User.findOneAndUpdate(
+      {_id:userId},
+      {
+        $set:{
+          "coupon":"redeemed"
+        }
+      },
+      {new: true})
+  },
+  removeUpdate:async (userId)=>{
+    const result = await User.findOneAndUpdate(
+      {_id:userId},
+      {
+        $set:{
+          "couponCode":"null",
+          "coupon":"null"
+        }
+      },
+      {new: true})
+    console.log(result);
+  }
 }
