@@ -1,0 +1,54 @@
+
+
+
+<style>
+h1 {
+    font-size: 20px;
+    margin-top: 24px;
+    margin-bottom: 24px;
+  }
+  
+  img {
+  height: 60px;
+  }
+  </style>
+
+  {{> adminheader}}
+
+<div class="col-md-6 offset-md-3 mt-5">
+    
+     <h1>Edit Product</h1>
+     <form action="/admin/editproduct/{{data._id}}" method="POST" enctype="multipart/form-data">
+       <div class="form-group">
+         <label for="exampleInputName">Product Name</label>
+         <input type="text" name="productname" class="form-control" id="" placeholder="Enter Product Name" value="{{data.productname}}" required>
+       </div>
+          <div class="form-group">
+         <label for="exampleFormControlSelect1">Category</label>
+         <select class="form-control" id="" name="category"  required>
+           <option value="{{data.category}}">Sofa</option>
+           <option>Table</option>
+           <option>Chair</option>
+           <option>Bed</option>
+         </select>
+       </div>
+       <div class="form-group">
+         <label for="exampleInputEmail1">Price</label>
+         <input type="number" name="price" class="form-control" id=""  placeholder="Enter price" value="{{data.price}}" required>
+       </div>
+    
+        <div class="form-group">
+         <label for="exampleInputEmail1">Quantity</label>
+         <input type="number" name="quantity" class="form-control" id=""  placeholder="Enter quantity" value="{{data.quantity}}" required>
+       </div>
+       <hr>
+       <div class="form-group mt-3">
+        <img src="../uploads/{{data.image}}" alt="">
+         <label class="mr-2">Change Image</label>
+         <input type="file" name="image" value="../uploads/{{data.image}}" accept="image/*">
+       </div>
+       <hr>
+       <button type="submit" class="btn btn-primary">Update</button>
+     </form>
+ </div> 
+ 

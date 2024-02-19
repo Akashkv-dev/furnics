@@ -136,6 +136,19 @@ cancelled: async (data) => {
       return null; // or throw an error indicating invalid status transition
 
     }
+},
+filterorder: async function(low, high){
+  const orders = await Order.find({totalprice: {$gt: low, $lt: high}}).populate('orderid').lean()
+  return orders;
+},
+
+filterOrderType: async function(payType){
+  const orders = await Order.find({paymentmethod: payType}).populate('orderid').lean()
+    return orders;
+},
+filterOrderStatus: async function(status1){
+  const orders = await Order.find({status: status1}).populate('orderid').lean()
+    return orders;
 }
 
 };

@@ -7,6 +7,9 @@ const userH = require("../helpers/userHelper");
 const adminH = require("../helpers/adminHelper")
 const nodemailer = require("nodemailer");
 const { log } = require("console");
+const fs = require('fs');
+const { search } = require("../routes");
+
 module.exports = {
   login:(req,res)=>{
     res.render("admin/adminLogin")
@@ -64,6 +67,25 @@ module.exports = {
 
     res.render("admin/allorders", { orders });
   },
+  filterOrder: async (req, res) => {
+    const lowvalue = req.query.l;
+    const highvalue = req.query.h;
+    const orderfilter = await orderH.filterorder(lowvalue, highvalue);
+    res.render('admin/allorders', { orders: orderfilter })
+  },
+  filterType: async (req, res) => {
+    const payType = req.params.paymentMethod;
+    console.log(payType);
+    const filteredOrderType = await orderH.filterOrderType(payType);
+    res.render("admin/allorders", { orders: filteredOrderType });
+  }, 
+  filterStatus:async(req, res) => {
+    const status1 = req.params.status;
+    console.log("sjhdhjdshhfj",status1);  
+
+    const filteredOrderStatus = await orderH.filterOrderStatus(status1)
+    res.render("admin/allorders", {orders: filteredOrderStatus})
+  },
   productdetail: async (req, res) => {
     const id = req.params.id;
     const productid = await orderH.productdetail(id);
@@ -93,7 +115,7 @@ module.exports = {
   },
   allusers: async (req, res) => {
     const users = await userH.alluser();
-    res.render("admin/allusers", { users });
+    res.render("admin/allusers", { users:users,search:true });
   },
   // edituser: async (req, res) => {
   //   const userid = req.params.id;
@@ -133,9 +155,66 @@ module.exports = {
     await userH.delete(userid);
     res.redirect("/admin/allusers");
   },
+  blockuser: async (req, res) => {
+    const productid = req.params.id
+    await adminH.blockuser(productid)
+    res.redirect('/admin/allusers');
+  },
+  unblockuser: async (req, res) => {
+    const productid = req.params.id
+    await adminH.unblockuser(productid)
+    res.redirect('/admin/allusers');
+  },
+  searchuser:async (req,res)=>{
+    data=req.body.search
+    const user =await userH.searchuser(data)
+    console.log(user[0]);
+    res.render("admin/allusers",{users:user})
+  },
   allproducts: async (req, res) => {
     const data = await productH.allproducts();
     res.render("admin/allproducts", { data: data });
+  },
+  editproduct: async (req, res) => {
+    const productid = req.params.id
+    const data = await productH.findItem(productid)
+    console.log(data);
+    res.render('admin/editproduct', { data })
+
+  },
+  updateproduct:async (req,res)=>{
+      const productid = req.params.id
+      const data = await productH.findItem(productid);
+      var image = data.image
+      const imagePath = './public/uploads/' + image;
+      const Image = (req.body.image = path.basename(req.file.filename));
+      fs.unlink(imagePath, (err) => {
+        if (err && err.code !== 'ENOENT') {
+          console.error('Error deleting existing image:', unlinkErr);
+        }
+      });
+      const datas = {
+        productname: req.body.productname,
+        image: Image,
+        price: req.body.price,
+        category: req.body.category,
+        quantity: req.body.quantity,
+      }
+      await productH.productupdating(datas, productid)
+      res.redirect('/admin/allproducts')
+    
+  },
+  deleteproduct: async (req, res) => {
+    const proid = req.params.id
+    const data = await productH.findItem(proid);
+    const imagePath = './public/uploads/' + data.image;
+    fs.unlink(imagePath, (err) => {
+      if (err && err.code !== 'ENOENT') {
+        console.error('Error deleting existing image:', unlinkErr);
+      }
+    });
+    await productH.deleteproduct(proid)
+    res.redirect('/admin/allproducts');
   },
   coupon: async (req, res) => {
     try {

@@ -307,5 +307,13 @@ module.exports = {
       },
       {new: true})
     console.log(result);
+  },
+  searchuser:async (data)=>{
+    try {
+      const result=await User.find({name:{$regex:`^${data}`,$options:'i'}}).lean()
+    return result
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

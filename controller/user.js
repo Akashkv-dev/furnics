@@ -28,17 +28,22 @@ module.exports = {
     if (!valid) {
       res.render("users/login", { invalid: "invalid email" });
     } else {
-      const currentPassword = await bcrypt.compare(
-        req.body.password,
-        valid.password
-      )
-       if (currentPassword) {
-        req.session.userId = valid._id;
-        req.session.loggedIn = true;
-        console.log("User logged in");
-        res.redirect("/");
-      } else {
-        res.render("users/login", { invalid: "invalid password" });
+      if(valid.status === "block"){
+        res.render("users/login", { invalid: "Your account has been blocked" });
+      }
+      else{
+        const currentPassword = await bcrypt.compare(
+          req.body.password,
+          valid.password
+        )
+         if (currentPassword) {
+          req.session.userId = valid._id;
+          req.session.loggedIn = true;
+          console.log("User logged in");
+          res.redirect("/");
+        } else {
+          res.render("users/login", { invalid: "invalid password" });
+        }
       }
     }
   },

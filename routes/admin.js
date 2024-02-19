@@ -21,8 +21,18 @@ const {
   allproducts,
   adminSignin,
   coupon,
-  addCoupon
+  addCoupon,
+  blockuser,
+  unblockuser,
+  editproduct,
+  updateproduct,
+  deleteproduct,
+  searchuser,
+  filterType,
+  filterOrder,
+  filterStatus
 } = require("../controller/admin.js");
+const admin = require("../controller/admin.js");
 
 router.get("/admin",login)
 router.post("/signin",adminSignin)
@@ -31,16 +41,25 @@ router.get("/logout", adminlogout);
 router.get("/addproducts",adminAuth, addproducts);
 router.post("/productadded",adminAuth, upload.single("image"), productAdded);
 router.get("/allorders",adminAuth, allorders);
+router.get("/filter", adminAuth, filterOrder);
+router.get("/filter/:paymentMethod", adminAuth, filterType);
+router.get("/filterstatus/:status",adminAuth, filterStatus)
 router.get("/product/:id",adminAuth, productdetail);
 router.get("/confirm/:id",adminAuth, confirmorder);
 router.get("/shipped/:id",adminAuth, shiporder);
 router.get("/delivered/:id",adminAuth, deliverorder);
 router.get("/cancelled/:id",adminAuth, cancelorder);
 router.get("/allusers",adminAuth, allusers);
+router.post("/search",adminAuth,searchuser)
 // router.get("/edituser/:id", edituser);
 // router.post("/updateuser/:id", updateuser);
 router.get("/deleteuser/:id",adminAuth, deleteuser);
+router.get("/blockuser/:id",adminAuth, blockuser);
+router.get("/unblockuser/:id",adminAuth, unblockuser);
 router.get("/allproducts",adminAuth, allproducts);
+router.get("/editproduct/:id",adminAuth, editproduct);
+router.post("/editproduct/:id",adminAuth, upload.single("image"), updateproduct);
+router.get("/deleteproduct/:id",adminAuth,deleteproduct)
 
 //coupon
 router.get("/coupon",adminAuth, coupon);

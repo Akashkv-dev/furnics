@@ -48,6 +48,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/users", express.static(path.join(__dirname, "public")));
 app.use("/admin", express.static(path.join(__dirname, "public")));
+app.use("/admin/editproduct", express.static(path.join(__dirname, "public/admin")));
+app.use("/admin/filter", express.static(path.join(__dirname, "public/admin")));
+app.use("/admin/filterstatus", express.static(path.join(__dirname, "public/admin")));
 
 process.on("unhandledRejection", (reason, promise) => {
   console.error("Unhandled Rejection at:", promise, "reason:", reason);

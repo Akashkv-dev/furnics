@@ -23,6 +23,101 @@
   <section class="px-3">
     <h2>All Orders</h2>
 
+  <div class="dropdown float-right pl-2 mb-3">
+                  <button
+                    class="btn btn-outline-secondary dropdown-toggle"
+                    type="button"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    Status<i class="ti ti-adjustments"></i>
+                  </button>
+                  <div
+                    class="dropdown-menu"
+                    aria-labelledby="dropdownMenuButton"
+                  >
+                    <a class="dropdown-item " href="/admin/filterstatus/pending">
+                      Pending</a>
+                    <a
+                      class="dropdown-item "
+                      href="/admin/filterstatus/Shipped"
+                    > Shipped </a>
+                    <a
+                      class="dropdown-item " 
+                      href="/admin/filterstatus/Delivered"
+                    > Delivered</a>
+                    <a
+                      class="dropdown-item"
+                      href="/admin/filterstatus/Cancelled"
+                    > Cancelled</a>
+                    <a
+                      class="dropdown-item"
+                      href="/admin/allorders"
+                    > All</a>
+                  </div>
+                </div>
+                <div class="dropdown float-right pl-2">
+                  <button
+                    class="btn btn-outline-secondary dropdown-toggle"
+                    type="button"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    Payment<i class="ti ti-adjustments"></i>
+                  </button>
+                  <div
+                    class="dropdown-menu"
+                    aria-labelledby="dropdownMenuButton"
+                  >
+                    <a class="dropdown-item" href="/admin/filter/cod">
+                      COD</a>
+                    <a
+                      class="dropdown-item"
+                      href="/admin/filter/razorpay"
+                    > Online</a>
+                    <a
+                      class="dropdown-item"
+                      href="/admin/allorders"
+                    > All</a>
+                  </div>
+                </div>
+                <div class="dropdown float-right pl-2">
+                  <span>Filters:   </span>
+
+                  <button
+                    class="btn btn-outline-secondary dropdown-toggle"
+                    type="button"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    Price<i class="ti ti-adjustments"></i>
+                  </button>
+                  <div
+                    class="dropdown-menu"
+                    aria-labelledby="dropdownMenuButton"
+                  >
+                    {{!-- href="/admin/filter/?l=0&h=20000"> --}}
+                    <a class="dropdown-item"
+                    id="price"
+                     href="/admin/filter/?l=0&h=20000"
+                      >Less than ₹20000</a>
+                    <a
+                      class="dropdown-item price"
+                      href="/admin/filter/?l=20000&h=30000"
+                    > ₹20000-30000 </a>
+                    <a
+                      class="dropdown-item price"
+                      href="/admin/filter/?l=30000&h=100000"
+                    > More than ₹30000</a>
+                    <a
+                      class="dropdown-item price"
+                      href="/admin/allorders"
+                    >All</a>
+                  </div>
+                </div>
   <table>
     <thead>
       <tr>
@@ -69,4 +164,5 @@
     }
 
   </script>
+  
 </body>

@@ -19,4 +19,19 @@ module.exports = {
       throw error;
     }
   },
+  productupdating: async (data, productid) => {
+    const result = await product.updateOne({ _id: productid }, {
+        $set:
+        {
+            productname: data.productname,
+            image: data.image,
+            price: data.price,
+            category: data.category,
+            quantity: data.quantity,
+        }
+    },{new:true});
+},
+deleteproduct:async(data)=>{
+  await product.deleteOne({_id : data})
+}
 };

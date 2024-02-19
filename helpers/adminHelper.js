@@ -1,6 +1,7 @@
 const product=require('../modals/Products')
 const Admin = require("../modals/Admin")
 const Coupon = require("../modals/Coupon")
+const User = require("../modals/User")
 
 module.exports ={
     findAdmin:async (email)=>{
@@ -19,5 +20,11 @@ module.exports ={
         const result =await Coupon.insertMany(data)
         return result
     },
+    blockuser: async (data) => {
+        await User.updateOne({ _id: data }, { $set: { status: "block" } });
+      },
+      unblockuser: async (data) => {
+        await User.updateOne({ _id: data }, { $unset: { status: 1 } });
+    }
     
 }
