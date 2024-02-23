@@ -76,7 +76,7 @@ app.use(
     proxy: true,
     saveUninitialized: true,
     cookie: { maxAge: 1000 * 60 * 60 * 24 },
-    store: new MongoDBStore({ mongooseConnection: connect }),
+    // store: new MongoDBStore({ mongooseConnection: connect }),
   })
 );
 
