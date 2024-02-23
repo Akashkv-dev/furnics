@@ -21,7 +21,7 @@ module.exports = {
       } else {
         totalPay = cartProduct.totalPrice + 5;
       }
-      if(user.coupon == "applied"){
+      if(user.coupon == "applied" && cartProduct.totalPrice >=10000){
         console.log("coupon",coupon.couponCode);
         totalPay = totalPay - disprice
         console.log("garnd total",totalPay);
