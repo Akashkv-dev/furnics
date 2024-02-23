@@ -20,7 +20,15 @@
   {{> userheader}}
 
 <body>
-
+{{#if (eq cartItems.length 0)}}
+    <div class="col-md-12 mt-5" style="height: 225px;">
+      <div class="card border-rounded shadow p-5 m-4">
+        <div class="card-body">
+          <h3 class="card-title">No orders</h3>
+        </div>
+      </div>
+    </div>
+  {{else}}
 
   <h2>Your Orders</h2>
 
@@ -47,6 +55,7 @@
     </tbody>
     {{/each}}
   </table>
+  {{/if}}
 
 </body>
 
