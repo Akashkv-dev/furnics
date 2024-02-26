@@ -58,9 +58,9 @@ router.post("/resetpassword", resetpassword);
 
 router.get("/profile", isAuth, edituser);
 router.post("/updateuser/:id", isAuth, updateuser);
-router.get("/addproducts", isAuth, allproducts);
-router.get("/cart", isAuth, viewcart);
-router.get("/addtocart/:id", isAuth, addTocart);
+router.get("/addproducts", allproducts);
+router.get("/cart", viewcart);
+router.get("/addtocart/:id", addTocart);
 router.post("/cart/update", isAuth, quantityUpdate);
 router.post("/cart/remove", isAuth, cartItemRemove);
 router.get("/checkout", isAuth, checkOut);

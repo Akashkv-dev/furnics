@@ -31,6 +31,7 @@ const hbs = exphbs.create({
     gt: function (arg1, arg2) {
       return arg1 > arg2;
     },
+    
     includes: function (array, value) {
       return array.includes(value);
     }

@@ -7,8 +7,10 @@ module.exports = {
     var result = await User.findOne({ email: data }).lean();
     return result;
   },
-  existUser: async (Email,Phone) => {
-    var result = await User.findOne({ $or: [{email: Email},{phone:Phone}] })
+  existUser: async (Email, Phone) => {
+    var result = await User.findOne({
+      $or: [{ email: Email }, { phone: Phone }],
+    });
     return result;
   },
   alluser: async () => {
@@ -63,12 +65,46 @@ module.exports = {
     var result = await user.save();
     return result;
   },
+  pushMultipleToCart: async (cartItems, userId) => {
+    console.log("cartitems", cartItems);
+    try {
+        const user = await User.findOne({ _id: userId });
+
+        if (!user) {
+            console.error("User not found");
+            return;
+        }
+
+        cartItems.forEach(async (cartItem) => {
+            const { productId, quantity, price } = cartItem;
+            console.log("productid",productId);
+            const existingItemIndex = user.cart.findIndex(
+                (cartItem) => cartItem.productId.toString() === productId
+            );
+
+            if (existingItemIndex !== -1) {
+                // If item already exists in cart, update quantity
+                user.cart[existingItemIndex].quantity += 1;
+            } else {
+                // If item does not exist in cart, push new item
+                user.cart.push({ productId, quantity, price });
+            }
+        });
+
+        const result = await user.save();
+        return result;
+    } catch (error) {
+        console.error("Error adding items to cart:", error);
+        throw error;
+    }
+}
+
+
+,
   findProduct: async (data) => {
     var cart = await User.findOne({ _id: data })
       .populate({ path: "cart.productId", model: "products" })
       .lean();
-    console.log("found product");
-    console.log(cart.cart.productId);
 
     if (cart.cart) {
       let totalPrice = 0;
@@ -76,11 +112,10 @@ module.exports = {
       for (const cartItem of cart.cart) {
         if (cartItem.productId && cartItem.productId.price) {
           totalPrice += cartItem.quantity * cartItem.productId.price;
-           totalsum= totalPrice + 5
-
+          totalsum = totalPrice + 5;
         }
       }
-      return { cart, totalPrice ,totalsum};
+      return { cart, totalPrice, totalsum };
     } else {
       return { cart };
     }
@@ -243,77 +278,87 @@ module.exports = {
   forgotpassword: async (email1, password1) => {
     await User.updateOne({ email: email1 }, { $set: { password: password1 } });
   },
-  otpfaileddelete:async (data)=>{
+  otpfaileddelete: async (data) => {
     await User.findOneAndDelete({ phone: data });
   },
-  findwishlist:async (userId,productId)=>{
-    const result = await Wishlist.findOne({user:userId,products:productId})
-    return result;
-  },
-  removeItemfromWishlist:async (userId,productId)=>{
-    const result =await Wishlist.findOneAndUpdate(
-      { user: userId },
-      { $pull: { products: productId } },
-      { new: true }
-  )
-  },
-  findwishlistUser:async (userId)=>{
-    const result = await Wishlist.findOne({user:userId})
-    return result;
-  },
-  createemptyWishlist:(userId)=>{
-    const result = new Wishlist({
+  findwishlist: async (userId, productId) => {
+    const result = await Wishlist.findOne({
       user: userId,
-      products: []
+      products: productId,
     });
     return result;
   },
-  findingwishlistProducts:async (userId)=>{
-    const result=await Wishlist.findOne({user:userId}).populate({path:"products",model:"products"}).lean()
+  removeItemfromWishlist: async (userId, productId) => {
+    const result = await Wishlist.findOneAndUpdate(
+      { user: userId },
+      { $pull: { products: productId } },
+      { new: true }
+    );
+  },
+  findwishlistUser: async (userId) => {
+    const result = await Wishlist.findOne({ user: userId });
     return result;
   },
-  updateUsercoupon:async (userId,couponcode)=>{
+  createemptyWishlist: (userId) => {
+    const result = new Wishlist({
+      user: userId,
+      products: [],
+    });
+    return result;
+  },
+  findingwishlistProducts: async (userId) => {
+    const result = await Wishlist.findOne({ user: userId })
+      .populate({ path: "products", model: "products" })
+      .lean();
+    return result;
+  },
+  updateUsercoupon: async (userId, couponcode) => {
     console.log(userId);
     const result = await User.findOneAndUpdate(
-      {_id:userId},
+      { _id: userId },
       {
-        $set:{
-          "couponCode":couponcode,
-          "coupon":"applied"
-        }
+        $set: {
+          couponCode: couponcode,
+          coupon: "applied",
+        },
       },
-      {new: true})
-      console.log(result);
-  },
-  updateSuccesscoupon:async (userId)=>{
-    console.log(userId);
-    const result = await User.findOneAndUpdate(
-      {_id:userId},
-      {
-        $set:{
-          "coupon":"redeemed"
-        }
-      },
-      {new: true})
-  },
-  removeUpdate:async (userId)=>{
-    const result = await User.findOneAndUpdate(
-      {_id:userId},
-      {
-        $set:{
-          "couponCode":"null",
-          "coupon":"null"
-        }
-      },
-      {new: true})
+      { new: true }
+    );
     console.log(result);
   },
-  searchuser:async (data)=>{
+  updateSuccesscoupon: async (userId) => {
+    console.log(userId);
+    const result = await User.findOneAndUpdate(
+      { _id: userId },
+      {
+        $set: {
+          coupon: "redeemed",
+        },
+      },
+      { new: true }
+    );
+  },
+  removeUpdate: async (userId) => {
+    const result = await User.findOneAndUpdate(
+      { _id: userId },
+      {
+        $set: {
+          couponCode: "null",
+          coupon: "null",
+        },
+      },
+      { new: true }
+    );
+    console.log(result);
+  },
+  searchuser: async (data) => {
     try {
-      const result=await User.find({name:{$regex:`^${data}`,$options:'i'}}).lean()
-    return result
+      const result = await User.find({
+        name: { $regex: `^${data}`, $options: "i" },
+      }).lean();
+      return result;
     } catch (error) {
       console.log(error);
     }
-  }
-}
+  },
+};
