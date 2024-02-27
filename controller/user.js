@@ -4,6 +4,7 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const verifySid = process.env.VERIFY_SID;
 const client = require("twilio")(accountSid, authToken);
+const logger = require("../util/winston")
 
 const userH = require("../helpers/userHelper");
 const productH = require("../helpers/productHelper");
@@ -176,35 +177,6 @@ module.exports = {
     const isUser = req.session.loggedIn;
     res.render("users/allproducts", { prodata, isUser });
   },
-
-  // cart
-  // viewcart: async (req, res) => {
-  //   const isUser = req.session.loggedIn;
-  //   const userid = req.session.userId;
-  //   const cartProduct = await userH.findProduct(userid);
-  //   const cartItems = cartProduct.cart.cart || [];
-
-  //   if (cartItems.length > 0) {
-  //     try {
-  //       const cartCount = cartItems.length;
-  //       console.log("cartCount", cartCount);
-
-  //       const sum1 = cartItems.reduce(
-  //         (sum, item) => sum + item.quantity * item.productId.price,
-  //         0
-  //       );
-  //       console.log("sum", sum1);
-  //       const totalSum = sum1 + 5;
-  //       console.log(totalSum);
-
-  //       res.render("users/cart", { cartItems:cartItems, totalSum:totalSum, cartCount:cartCount ,sum1:sum1,isUser:isUser});
-  //     } catch (error) {
-  //       console.error("product not found", error);
-  //     }
-  //   } else {
-  //     res.render("users/cart", { cartItems: [],isUser:isUser });
-  //   }
-  // },
   viewcart: async (req, res) => {
     let isUser = req.session.loggedIn || false;
     let userid = req.session.userId || null;
@@ -244,28 +216,6 @@ module.exports = {
     }
   },
 
-  // addTocart: async (req, res) => {
-  //   const Productid = req.params.id;
-  //   const userid = req.session.userId;
-  //   const Product = await productH.findItem(Productid);
-  //   const Price = Product.price;
-  //   console.log(Price);
-
-  //   try {
-  //     // const selectedItem=await productH.findItem(productid)
-  //     const arrayItems = {
-  //       productid: Productid,
-  //       quantity: 1,
-  //       price: Price,
-  //     };
-  //     await userH.pushTOcart(arrayItems, userid);
-
-  //     res.redirect("/index/homepage");
-  //   } catch (error) {
-  //     console.error(error);
-  //     res.status(500).send("Internal Server Error");
-  //   }
-  // },
   addTocart: async (req, res) => {
     const Productid = req.params.id;
     const Product = await productH.findItem(Productid);
@@ -306,6 +256,7 @@ module.exports = {
           });
         }
         console.log("withoutuser", req.session.cart);
+        logger.log("withoutuser", req.session.cart)
       }
 
       res.redirect("/");

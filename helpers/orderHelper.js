@@ -1,5 +1,6 @@
 const User = require("../modals/User");
 const Order = require("../modals/Order");
+const Product =require("../modals/Products")
 
 module.exports = {
   addAddress: async (data, userid) => {
@@ -54,6 +55,20 @@ module.exports = {
   },
   deleteCartorderd: async (userid) => {
     try {
+      const user =await User.findOne({_id:userid})
+      const cart = user.cart;
+        if (!cart || cart.length === 0) {
+            throw new Error("Cart is empty");
+        }
+      for (const item of cart) {
+        const proid = item.productId;
+        const orderedqty = item.quantity;
+
+        await Product.findOneAndUpdate(
+            { _id: proid },
+            { $inc: { quantity: -orderedqty } }
+        );
+    }
       const result = await User.updateOne(
         { _id: userid },
         { $set: { cart: [] } }
@@ -63,9 +78,13 @@ module.exports = {
     }
   },
   orderfinding: async (userId) => {
-    const result = await Order.find({ userid: userId }).lean();
+    const result = await Order.find({
+        userid: userId,
+        status: { $ne: 'pending' }
+    }).lean(); // Using lean() to return plain JavaScript objects
+    
     return result;
-  },
+},
   findorder: async () => {
     const result = await Order.find().lean();
     return result;
@@ -137,18 +156,19 @@ cancelled: async (data) => {
 
     }
 },
-filterorder: async function(low, high){
+filterorder: async (low, high)=>{
   const orders = await Order.find({totalprice: {$gt: low, $lt: high}}).populate('orderid').lean()
   return orders;
 },
 
-filterOrderType: async function(payType){
+filterOrderType: async (payType)=>{
   const orders = await Order.find({paymentmethod: payType}).populate('orderid').lean()
     return orders;
 },
-filterOrderStatus: async function(status1){
+filterOrderStatus: async (status1)=>{
   const orders = await Order.find({status: status1}).populate('orderid').lean()
     return orders;
-}
+},
+
 
 };

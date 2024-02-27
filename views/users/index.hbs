@@ -189,7 +189,7 @@
 
                 </div>
                 <div class="cart-info">
-                  <a href="" class="wishlist-btn" data-product-id="{{this._id}}">
+                  <a href="" class="wishlist-btn" onclick="addToWishlist(event)" data-product-id="{{this._id}}">
                     <span><i class="fa-regular fa-heart"></i></span>
                   </a>
                 </div>
@@ -371,7 +371,7 @@
   {{> userfooter}}
 </body>
 <script src="https://kit.fontawesome.com/d79b7af11d.js" crossorigin="anonymous"></script>
-{{!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script>
   function addToWishlist(productId) {
     // Perform logic to add the product to the wishlist
@@ -387,7 +387,7 @@
       }
     });
   }
-</script> --}}
+</script>
 <script>
   // Assuming you're using jQuery for simplicity, but you can use vanilla JavaScript too
   $(document).ready(function () {

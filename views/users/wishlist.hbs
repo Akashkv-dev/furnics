@@ -43,6 +43,9 @@
                 <div class="mt-4">
                   <a href="" class="btn btn-light border px-2 pt-2  add-to-wishlist-button" data-product-id="{{this._id}}"><i class="fa-solid fa-trash fa-bounce fa-xl" style="color: #000000;"></i></a>
                 </div>
+                <div class="mt-4">
+                  <a href="/users/addtocart/{{this._id}}" onclick="addToCart(event)">Add to cart</a>
+                </div>
               </div>
             </div>
           </div>
@@ -51,6 +54,22 @@
     {{/each}}
   {{/if}}
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  function addToCart(event) {
+    event.preventDefault(); // Prevent the default behavior of the link
+
+    // Show SweetAlert popup
+    Swal.fire({
+      title: 'Added to cart!',
+      icon: 'success',
+      showConfirmButton: false,
+      timer: 1500 // Automatically close after 1.5 seconds
+    });
+  }
+</script>
+
+
 <script src="https://kit.fontawesome.com/d79b7af11d.js" crossorigin="anonymous"></script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
