@@ -37,15 +37,16 @@
   }
 </style>
 {{> userheader}}
+
 <body class="bg-body">
-{{#if (eq cartItems.length 0)}}
-    <div class="col-md-12 mt-5" style="height: 225px;">
-      <div class="card border-rounded shadow p-5 m-4">
-        <div class="card-body">
-          <h3 class="card-title">No cart</h3>
-        </div>
+  {{#if (eq cartItems.length 0)}}
+  <div class="col-md-12 mt-5" style="height: 225px;">
+    <div class="card border-rounded shadow p-5 m-4">
+      <div class="card-body">
+        <h3 class="card-title">No cart</h3>
       </div>
     </div>
+  </div>
   {{else}}
 
   <section class="h-80 h-custom">
@@ -66,7 +67,8 @@
                     <div id="cartrow_{{this.productId._id}}"
                       class="row mb-4 d-flex justify-content-between align-items-center">
                       <div class="col-md-2 col-lg-2 col-xl-2">
-                        <img src="../uploads/{{this.productId.image}}{{this.image}}" class="img-fluid rounded-3" alt="product image">
+                        <img src="../uploads/{{this.productId.image}}{{this.image}}" class="img-fluid rounded-3"
+                          alt="product image">
                       </div>
                       <div class="col-md-3 col-lg-3 col-xl-3">
                         <h6 class="text-muted">{{this.productId.productname}}{{this.productname}}</h6>
@@ -88,11 +90,18 @@
                       <div class="col-md-1 col-lg-1 col-xl-1 text-end">
                         <i class="ti ti-trash" data-product-id="{{this.productId._id}}"></i>
                       </div>
+                      <div class="mt-3">
+                        {{#if (gt this.productId.quantity 0)}}
+                      <h6 class="text-success">In stock</h6>
+                      {{else}}
+                      <h6 class="text-danger">Out of stock</h6>
+                      {{/if}}
+                      </div>
                     </div>
                     {{/each}}
 
 
-                    
+
 
                     <div class="pt-5">
                       <h6 class="mb-0"><a href="/" class="text-body"><i class="fas fa-long-arrow-alt-left me-2"></i>Back
@@ -107,7 +116,7 @@
 
                     <div class="d-flex justify-content-between mb-4">
                       <h5 class="text-uppercase" id="cartCount">items {{cartCount}}</h5>
-                      <h5 id="cartprice">₹  {{sum1}}</h5>
+                      <h5 id="cartprice">₹ {{sum1}}</h5>
                     </div>
 
                     <h5 class="text-uppercase mb-3">Shipping</h5>
@@ -118,14 +127,14 @@
 
                       </select>
                     </div>
-                    
+
                     {{!-- <div class="mb-5">
                       <div class="form-outline">
                         <input type="text" id="form3Examplea2" class="form-control form-control-lg" />
                         <label class="form-label" for="form3Examplea2">Enter your code</label>
                       </div>
                     </div> --}}
-                    
+
 
                     <hr class="my-4">
 
@@ -147,7 +156,7 @@
     </div>
   </section>
   {{/if}}
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
   <script>
     $(document).ready(function () {
@@ -196,7 +205,7 @@
     });
 
 
-//    ******** cartItem remove ***********
+    //    ******** cartItem remove ***********
 
     $('.ti-trash').on('click', function () {
       const productId = $(this).data('product-id');
@@ -218,7 +227,7 @@
             $('#cartprice').text(`$ ${response.cartSum}`);
             $('#totalprice').text(`$ ${response.cartTotal}`);
             $('#cartCount').text(` ITEMS ${response.cartCount}`);
-
+            window.location.reload()
 
             console.log('Item removed successfully');
           } else {
@@ -231,6 +240,6 @@
       });
     });
   </script>
-  
+
 
 </body>

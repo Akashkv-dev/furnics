@@ -188,6 +188,7 @@ module.exports = {
         const cartProduct = await userH.findProduct(userid);
         if (cartProduct && cartProduct.cart) {
           cartItems = cartProduct.cart.cart || [];
+          console.log(cartItems);
         }
       }
 
@@ -196,7 +197,7 @@ module.exports = {
         cartItems = cartItems.concat(req.session.cart);
       }
 
-      let cartCount = cartItems.length;
+      let cartcount = cartItems.length;
       let sum1 = cartItems.reduce(
         (sum, item) => sum + item.price,
         0
@@ -206,7 +207,7 @@ module.exports = {
       res.render("users/cart", {
         cartItems,
         totalSum,
-        cartCount,
+        cartcount,
         sum1,
         isUser,
       });

@@ -106,7 +106,7 @@ module.exports = {
       .populate({ path: "cart.productId", model: "products" })
       .lean();
 
-    if (cart.cart) {
+    if (cart && cart.cart) {
       let totalPrice = 0;
       let totalsum;
       for (const cartItem of cart.cart) {

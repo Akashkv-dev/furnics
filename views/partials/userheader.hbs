@@ -1,3 +1,21 @@
+<style>
+    .cart-icon-container {
+    position: relative;
+    display: inline-block;
+}
+
+.cart-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 0px 4px;
+    font-size: 11px;
+}
+
+</style>
 <body class="bg-body" data-bs-spy="scroll" data-bs-target="#navbar" data-bs-root-margin="0px 0px -40%"
     data-bs-smooth-scroll="true" tabindex="0">
 
@@ -104,12 +122,12 @@
                             class="navbar-nav text-uppercase justify-content-end align-items-center flex-grow-1 pe-3">
                             <li class="nav-item dropdown">
                                 <a class="nav-link me-4 active " href="/" id="dropdownPages">Home</a>
-                                
+
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link me-4" href="#about-us">About Us</a>
                             </li>
-                            
+
                             <li class="nav-item dropdown me-4">
                                 <a class="nav-link dropdown-toggle" href="#" id="dropdownPages"
                                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Catagory</a>
@@ -141,13 +159,13 @@
                                     <li>
                                         <a href="/users/cart" class="dropdown-item item-anchor">Cart </a>
                                     </li>
-                                                                        
+
                                     <li>
                                         <a href="/users/profile" class="dropdown-item item-anchor">My Account </a>
                                     </li>
                                     <li>
                                         <a href="/users/myorders" class="dropdown-item item-anchor">My Orders
-                                            </a>
+                                        </a>
                                     </li>
                                     <li>
                                         <a href="/users/wishlist" class="dropdown-item item-anchor">Wishlist </a>
@@ -164,7 +182,7 @@
 
                             {{else}}
                             <li class="pe-3">
-                                
+
                                 <a href="/users/login">
                                     <svg class="user" width="18" height="18">
                                         <use xlink:href="#user"></use>
@@ -188,10 +206,11 @@
 
 
                                         <li>
-                                            <a href="/users/cart">
+                                            <a href="/users/cart" class="cart-icon-container">
                                                 <svg class="cart" width="18" height="18">
                                                     <use xlink:href="#cart"></use>
                                                 </svg>
+                                                <span class="cart-badge">{{cartcount}}</span>
                                             </a>
                                         </li>
                                     </ul>
@@ -210,9 +229,9 @@
     <script type="text/javascript" src="/js/plugins.js"></script>
     <script type="text/javascript" src="/js/script.js"></script>
 
-    
 
-<script>
+
+    <script>
         document.addEventListener("DOMContentLoaded", function () {
             // Set isHome based on your logic
             var isHome = window.location.pathname === '/'; // Adjust this condition based on your actual home page path
@@ -223,5 +242,5 @@
                 homeLink.style.display = 'none';
             }
         });
-</script>
+    </script>
 </body>
