@@ -4,7 +4,7 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const verifySid = process.env.VERIFY_SID;
 const client = require("twilio")(accountSid, authToken);
-const logger = require("../util/winston")
+const logger = require("../util/winston");
 
 const userH = require("../helpers/userHelper");
 const productH = require("../helpers/productHelper");
@@ -40,16 +40,16 @@ module.exports = {
           req.session.userId = valid._id;
           req.session.loggedIn = true;
           if (req.session.cart && req.session.cart.length > 0) {
-            let cartItems = req.session.cart.map(item => ({
-                productId: item.productId,
-                quantity: item.quantity,
-                price: item.price,
+            let cartItems = req.session.cart.map((item) => ({
+              productId: item.productId,
+              quantity: item.quantity,
+              price: item.price,
             }));
 
             await userH.pushMultipleToCart(cartItems, valid._id);
             delete req.session.cart;
             console.log("session cart emptied", req.session.cart);
-        }
+          }
           console.log("User logged in");
           res.redirect("/");
         } else {
@@ -198,18 +198,22 @@ module.exports = {
       }
 
       let cartcount = cartItems.length;
-      let sum1 = cartItems.reduce(
-        (sum, item) => sum + item.price,
-        0
-      );
+      let sum1 = cartItems.reduce((sum, item) => sum + item.price, 0);
       let totalSum = sum1 + 5;
-
+      let stock =true;
+      cartItems.forEach((item)=>{
+        if(item.productId.quantity === 0){
+          stock = false;
+        }
+      })
+      console.log(stock);
       res.render("users/cart", {
         cartItems,
         totalSum,
         cartcount,
         sum1,
         isUser,
+        stock
       });
     } catch (error) {
       console.error("Error rendering cart page:", error);
@@ -243,7 +247,9 @@ module.exports = {
         if (!req.session.cart) {
           req.session.cart = [];
         }
-        const existingCartItemIndex = req.session.cart.findIndex(item => item.productId === Productid);
+        const existingCartItemIndex = req.session.cart.findIndex(
+          (item) => item.productId === Productid
+        );
 
         if (existingCartItemIndex !== -1) {
           req.session.cart[existingCartItemIndex].quantity++;
@@ -257,7 +263,7 @@ module.exports = {
           });
         }
         console.log("withoutuser", req.session.cart);
-        logger.log("withoutuser", req.session.cart)
+        logger.log("withoutuser", req.session.cart);
       }
 
       res.redirect("/");

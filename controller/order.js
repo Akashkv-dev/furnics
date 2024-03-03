@@ -13,6 +13,9 @@ module.exports = {
     const coupon = await adminH.findCouponByCode(user.couponCode);
     const coupons =await adminH.findCoupon()
     const disprice = coupon ? coupon.amount : 0;
+    // const product =cartProduct.cart.cart
+    
+    // console.log(stock);
     let totalPay = 0;
     
     if (cartProduct.cart.cart.length > 0) {
@@ -47,10 +50,10 @@ module.exports = {
           coupons
         });
       }
-    } else {
-      res.redirect("/users/cart");
-      console.log("cartData not found");
     }
+    //  else {
+    //   res.json({ error: "Item is out of stock" });
+    // }
   },
   postCheckout: async (req, res) => {
     const userid = req.session.userId;
