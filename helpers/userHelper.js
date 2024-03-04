@@ -46,7 +46,7 @@ module.exports = {
   //     var result =await User.findOne({'cart.productId':data})
   //     return result;
   // },
-  pushTOcart: async (data, userid) => {
+  pushTOcart: async (data, userid,stock) => {
     const user = await User.findOne({ _id: userid });
     const productID = data.productid;
     const quantity = data.quantity;
@@ -57,7 +57,13 @@ module.exports = {
         cartItem.productId && cartItem.productId.toString() === productID
     );
     if (existingItemIndex !== -1) {
-      user.cart[existingItemIndex].quantity += 1;
+      if(user.cart[existingItemIndex].quantity < stock){
+        user.cart[existingItemIndex].quantity += 1 ;
+      }
+      else{
+        user.cart[existingItemIndex].quantity = stock
+      }
+      
     } else {
       user.cart.push({ productId: productID, quantity, price });
     }
