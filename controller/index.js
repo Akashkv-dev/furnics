@@ -13,9 +13,15 @@ module.exports = {
       const cartItems = user.cart.cart
       const cartcount =cartItems.length
       res.render("users/index", { prodata, isUser,cartcount });
-    }
+    } 
     else{
-      res.render("users/index", { prodata,cartcount:0 });
+      if(req.session.cart){
+        const cartcount = req.session.cart.length
+      res.render("users/index", { prodata,cartcount});
+      }
+      else{
+      res.render("users/index", { prodata,cartcount:0});
+      }
 
     }
   },
