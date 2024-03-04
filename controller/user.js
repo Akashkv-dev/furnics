@@ -224,7 +224,7 @@ module.exports = {
   addTocart: async (req, res) => {
     const Productid = req.params.id;
     const Product = await productH.findItem(Productid);
-
+    const stock = Product.quantity
     if (!Product) {
       return res.status(404).send("Product not found");
     }
@@ -241,7 +241,7 @@ module.exports = {
           quantity: 1,
           price: Price,
         };
-        await userH.pushTOcart(arrayItems, userid);
+        await userH.pushTOcart(arrayItems, userid ,stock);
       } else {
         // If user is not logged in, add product to the session cart
         if (!req.session.cart) {
