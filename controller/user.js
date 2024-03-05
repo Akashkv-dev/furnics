@@ -188,7 +188,6 @@ module.exports = {
         const cartProduct = await userH.findProduct(userid);
         if (cartProduct && cartProduct.cart) {
           cartItems = cartProduct.cart.cart || [];
-          console.log(cartItems);
         }
       }
 
@@ -206,7 +205,6 @@ module.exports = {
           stock = false;
         }
       })
-      console.log(stock);
       res.render("users/cart", {
         cartItems,
         totalSum,

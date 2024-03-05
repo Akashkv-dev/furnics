@@ -55,6 +55,68 @@
   body {
     background-color: #eae8e8;
   }
+
+  body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .coupons-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .coupon {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .coupon h4 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .coupon p {
+            color: #666;
+            font-size: 16px;
+            margin: 0;
+        }
+
+        .coupon .applyCoupon {
+            display: inline-block;
+            background-color: #3498db;
+            color: #fff;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .coupon .applyCoupon:hover {
+            background-color: #2980b9;
+        }
+
+        .coupon .appliedText {
+            color: #27ae60;
+            font-weight: bold;
+            display: none;
+        }
+
+        .coupon .removeCoupon {
+            color: #e74c3c;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            display: none;
+        }
+
+        .coupon:hover .removeCoupon {
+            display: inline;
+        }
 </style>
 
 <body>
@@ -232,28 +294,60 @@
                     Subtotal
                     <span>₹{{totalPrice}}</span>
                   </li>
-                  <li class="text-muted">
-                    <h4>redeem now</h4>
-                    {{#if applied}}
-                    <div class="coupon">
-                      {{coupon.couponCode}}-{{coupon.amount}}/-flat discount -
-                      <a class="applyCoupon" data-coupon-code="{{coupon.couponCode}}">Applied </a><span class="removeCoupon" href="" data-coupon-code="{{coupon.couponCode}}"><i
-                          class="ti ti-x"></i></span>
-                      <span class="appliedText" style="display:none;">Applied <span class="removeCoupon" href="" data-coupon-code="{{coupon.couponCode}}"><i
-                          class="ti ti-x"></i></span></span>
-                      
+
+                  <!-- Button trigger modal -->
+
+                  <button type="button" class="btn btn-dark m-2" data-bs-toggle="modal"
+                    data-bs-target="#staticBackdrop">
+                    available coupons
+                  </button>
+
+                  <!-- Modal -->
+                  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
+                    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="staticBackdropLabel">coupons</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+
+                          <div class="coupons-container">
+                            {{#if applied}}
+                            <div class="coupon">
+                              <h4 class="text-muted">Redeem Now</h4>
+                              <p>{{coupon.couponCode}} - {{coupon.amount}}/- flat discount -
+                                <a class="applyCoupon" data-coupon-code="{{coupon.couponCode}}">Applied</a>
+                                <span class="removeCoupon" href="" data-coupon-code="{{coupon.couponCode}}"><i
+                                    class="ti ti-x"></i></span>
+                                <span class="appliedText">Applied</span>
+                              </p>
+                            </div>
+                            {{else}}
+                            {{#each coupons}}
+                            <div class="coupon">
+                              <h4 class="text-muted">Redeem Now</h4>
+                              <p>{{this.couponCode}} - {{this.amount}}/- flat discount -
+                                <a href="" class="applyCoupon" data-coupon-code="{{this.couponCode}}">Apply</a>
+                                <span class="appliedText">Applied</span>
+                                <span class="removeCoupon" data-coupon-code="{{this.couponCode}}"><i
+                                    class="ti ti-x"></i></span>
+                              </p>
+                            </div>
+                            {{/each}}
+                            {{/if}}
+                          </div>
+
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          {{!-- <button type="button" class="btn btn-primary">Understood</button> --}}
+                        </div>
+                      </div>
                     </div>
-                    {{else}}
-                    {{#each coupons}}
-                    <div class="coupon">
-                      {{this.couponCode}}-{{this.amount}}/-flat discount -
-                      <a href="" class="applyCoupon" data-coupon-code="{{this.couponCode}}">Apply</a>
-                      <span class="appliedText" style="display:none;">Applied <span class="removeCoupon" data-coupon-code="{{this.couponCode}}"><i class="ti ti-x"></i></span></span>
-                      
-                    </div>
-                    {{/each}}
-                    {{/if}}
-                  </li>
+                  </div>
+
                   <li
                     class="list-group-item d-flex justify-content-between align-items-center px-0 fw-bold text-uppercase">
                     Discount
@@ -360,7 +454,7 @@
   <!--Section: Design Block-->
   </div>
 
-
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
@@ -482,51 +576,51 @@
       }
     }
   </script>
- <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    var applyButtons = document.querySelectorAll('.applyCoupon');
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var applyButtons = document.querySelectorAll('.applyCoupon');
 
-    applyButtons.forEach(function (button) {
-      button.addEventListener('click', function (event) {
-        event.preventDefault();
-        var couponCode = button.dataset.couponCode;
+      applyButtons.forEach(function (button) {
+        button.addEventListener('click', function (event) {
+          event.preventDefault();
+          var couponCode = button.dataset.couponCode;
 
-        // AJAX call to apply coupon
-        $.ajax({
-          type: 'POST',
-          url: '/users/applycoupon',
-          data: { couponCode: couponCode },
-          success: function (response) {
-            console.log(response);
-            // Update the price on the frontend with the response
-            if (response.success) {
-              // Hide all "applied" texts and reset buttons
-              document.querySelectorAll('.appliedText').forEach(function (appliedText) {
-                appliedText.style.display = 'none';
-              });
-              document.querySelectorAll('.applyCoupon').forEach(function (applyButton) {
-                applyButton.style.display = 'inline';
-              });
+          // AJAX call to apply coupon
+          $.ajax({
+            type: 'POST',
+            url: '/users/applycoupon',
+            data: { couponCode: couponCode },
+            success: function (response) {
+              console.log(response);
+              // Update the price on the frontend with the response
+              if (response.success) {
+                // Hide all "applied" texts and reset buttons
+                document.querySelectorAll('.appliedText').forEach(function (appliedText) {
+                  appliedText.style.display = 'none';
+                });
+                document.querySelectorAll('.applyCoupon').forEach(function (applyButton) {
+                  applyButton.style.display = 'inline';
+                });
 
-              // Show "applied" text for this coupon
-              button.nextElementSibling.style.display = 'inline'; // Show the "applied" text
-              button.style.display = 'none'; // Hide the apply button
+                // Show "applied" text for this coupon
+                button.nextElementSibling.style.display = 'inline'; // Show the "applied" text
+                button.style.display = 'none'; // Hide the apply button
 
-              $('#totalprice').text(response.grandtotal);
-              $('#disprice').text(response.disPrice);
+                $('#totalprice').text(response.grandtotal);
+                $('#disprice').text(response.disPrice);
+              }
+              else {
+                alert(response.message);
+              }
+            },
+            error: function (xhr, status, error) {
+              alert('Error applying coupon.');
             }
-            else {
-              alert(response.message);
-            }
-          },
-          error: function (xhr, status, error) {
-            alert('Error applying coupon.');
-          }
+          });
         });
       });
     });
-  });
-</script>
+  </script>
 
   <script>
     $(document).ready(function () {
@@ -553,7 +647,6 @@
     });
 
   </script>
-
 
 
 </body>
