@@ -156,19 +156,21 @@ cancelled: async (data) => {
 
     }
 },
-filterorder: async (low, high)=>{
-  const orders = await Order.find({totalprice: {$gt: low, $lt: high}}).populate('orderid').lean()
+// filterorder: async (low, high)=>{
+//   const orders = await Order.find({totalprice: {$gt: low, $lt: high}}).populate('orderid').lean()
+//   return orders;
+// },
+
+// filterOrderType: async (payType)=>{
+//   const orders = await Order.find({paymentmethod: payType}).populate('orderid').lean()
+//     return orders;
+// },
+// filterOrderStatus: async (status1)=>{
+//   const orders = await Order.find({status: status1}).populate('orderid').lean()
+//     return orders;
+// },
+filterOrders: async (filters) => {
+ const orders =await Order.find(filters).populate('orderid').lean();
   return orders;
-},
-
-filterOrderType: async (payType)=>{
-  const orders = await Order.find({paymentmethod: payType}).populate('orderid').lean()
-    return orders;
-},
-filterOrderStatus: async (status1)=>{
-  const orders = await Order.find({status: status1}).populate('orderid').lean()
-    return orders;
-},
-
-
+}
 };

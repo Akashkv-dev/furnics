@@ -15,6 +15,41 @@
   th {
     background-color: #f2f2f2;
   }
+  .filters-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.filters-container label {
+    margin-right: 10px;
+}
+
+.filters-container select,
+.filters-container input {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin-right: 10px;
+}
+
+.filters-container input[type="number"] {
+    width: 70px;
+}
+
+.filters-container button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.filters-container button:hover {
+    background-color: #0056b3;
+}
+
 </style>
 
 {{> adminheader}}
@@ -23,138 +58,70 @@
   <section class="px-3">
     <h2>All Orders</h2>
 
-  <div class="dropdown float-right pl-2 mb-3">
-                  <button
-                    class="btn btn-outline-secondary dropdown-toggle"
-                    type="button"
-                    data-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                  >
-                    Status<i class="ti ti-adjustments"></i>
-                  </button>
-                  <div
-                    class="dropdown-menu"
-                    aria-labelledby="dropdownMenuButton"
-                  >
-                    <a class="dropdown-item " href="/admin/filterstatus/pending">
-                      Pending</a>
-                    <a
-                      class="dropdown-item "
-                      href="/admin/filterstatus/Shipped"
-                    > Shipped </a>
-                    <a
-                      class="dropdown-item " 
-                      href="/admin/filterstatus/Delivered"
-                    > Delivered</a>
-                    <a
-                      class="dropdown-item"
-                      href="/admin/filterstatus/Cancelled"
-                    > Cancelled</a>
-                    <a
-                      class="dropdown-item"
-                      href="/admin/allorders"
-                    > All</a>
-                  </div>
-                </div>
-                <div class="dropdown float-right pl-2">
-                  <button
-                    class="btn btn-outline-secondary dropdown-toggle"
-                    type="button"
-                    data-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                  >
-                    Payment<i class="ti ti-adjustments"></i>
-                  </button>
-                  <div
-                    class="dropdown-menu"
-                    aria-labelledby="dropdownMenuButton"
-                  >
-                    <a class="dropdown-item" href="/admin/filter/cod">
-                      COD</a>
-                    <a
-                      class="dropdown-item"
-                      href="/admin/filter/razorpay"
-                    > Online</a>
-                    <a
-                      class="dropdown-item"
-                      href="/admin/allorders"
-                    > All</a>
-                  </div>
-                </div>
-                <div class="dropdown float-right pl-2">
-                  <span>Filters:   </span>
+    <div class="filters-container">
+      <label for="paymentMethod">Payment Method:</label>
+      <select id="paymentMethod">
+        <option value="">Select Payment Method</option>
+        <option value="COD">COD</option>
+        <option value="razorpay">Online Payment</option>
+      </select>
 
-                  <button
-                    class="btn btn-outline-secondary dropdown-toggle"
-                    type="button"
-                    data-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                  >
-                    Price<i class="ti ti-adjustments"></i>
-                  </button>
-                  <div
-                    class="dropdown-menu"
-                    aria-labelledby="dropdownMenuButton"
-                  >
-                    {{!-- href="/admin/filter/?l=0&h=20000"> --}}
-                    <a class="dropdown-item"
-                    id="price"
-                     href="/admin/filter/?l=0&h=20000"
-                      >Less than ₹20000</a>
-                    <a
-                      class="dropdown-item price"
-                      href="/admin/filter/?l=20000&h=30000"
-                    > ₹20000-30000 </a>
-                    <a
-                      class="dropdown-item price"
-                      href="/admin/filter/?l=30000&h=100000"
-                    > More than ₹30000</a>
-                    <a
-                      class="dropdown-item price"
-                      href="/admin/allorders"
-                    >All</a>
-                  </div>
-                </div>
-  <table>
-    <thead>
-      <tr>
-        <th>User</th>
-        <th>Product</th>
-        <th>Order ID</th>
-        <th>Total Price</th>
-        <th>Status</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each orders}}
-      <tr>
-        <td>{{this.name}}</td>
-        <td><a href="/admin/product/{{this._id}}">Product details</a></td>
-        <td>{{this.orderid}}</td>
-        <td>{{this.totalprice}}</td>
-        <td>{{this.status}}</td>
-        <td>
-          <div class="dropdown">
-            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown"
-              aria-haspopup="true" aria-expanded="false">
-              More
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              <a class="dropdown-item" href="#" onclick="confirmAction('/admin/confirm/{{_id}}')">Confirm</a>
-              <a class="dropdown-item" href="#" onclick="confirmAction('/admin/shipped/{{_id}}')">Shipped</a>
-              <a class="dropdown-item" href="#" onclick="confirmAction('/admin/delivered/{{_id}}')">Delivered</a>
-              <a class="dropdown-item" href="#" onclick="confirmAction('/admin/cancelled/{{_id}}')">Cancelled</a>
+      <label for="status">Order Status:</label>
+      <select id="status">
+        <option value="">Select Status</option>
+        <option value="pending">Pending</option>
+        <option value="Shipped">Shipped</option>
+        <option value="Delivered">Delivered</option>
+        <option value="Cancelled">Cancelled</option>
+      </select>
+
+      <label for="priceMin">Price Range:</label>
+      <input type="number" id="priceMin" placeholder="Min Price">
+      <span>-</span>
+      <input type="number" id="priceMax" placeholder="Max Price">
+
+      <button id="filterButton">Apply Filters</button>
+      <button id="allOrdersButton" class="m-2" onclick="window.location.href='/admin/allorders'">All Orders</button>
+    </div>
+
+
+    <table>
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Product</th>
+          <th>Order ID</th>
+          <th>Total Price</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each orders}}
+        <tr>
+          <td>{{this.name}}</td>
+          <td><a href="/admin/product/{{this._id}}">Product details</a></td>
+          <td>{{this.orderid}}</td>
+          <td>{{this.totalprice}}</td>
+          <td>{{this.status}}</td>
+          <td>
+            <div class="dropdown">
+              <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                More
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#" onclick="confirmAction('/admin/confirm/{{_id}}')">Confirm</a>
+                <a class="dropdown-item" href="#" onclick="confirmAction('/admin/shipped/{{_id}}')">Shipped</a>
+                <a class="dropdown-item" href="#" onclick="confirmAction('/admin/delivered/{{_id}}')">Delivered</a>
+                <a class="dropdown-item" href="#" onclick="confirmAction('/admin/cancelled/{{_id}}')">Cancelled</a>
+              </div>
+
             </div>
-
-          </div>
-        </td>
-      </tr>
-      {{/each}}
-  </table>
+          </td>
+        </tr>
+        {{/each}}
+    </table>
   </section>
   <script>
     function confirmAction(url) {
@@ -164,5 +131,39 @@
     }
 
   </script>
-  
+
 </body>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $('#filterButton').click(function () {
+      var paymentMethod = $('#paymentMethod').val();
+      var status = $('#status').val();
+      var priceMin = $('#priceMin').val();
+      var priceMax = $('#priceMax').val();
+
+      // Construct the URL with selected filters
+      var url = '/admin/filter?';
+
+      if (paymentMethod) {
+        url += 'paymentMethod=' + paymentMethod + '&';
+      }
+
+      if (status) {
+        url += 'status=' + status + '&';
+      }
+
+      if (priceMin) {
+        url += 'l=' + priceMin + '&';
+      }
+
+      if (priceMax) {
+        url += 'h=' + priceMax + '&';
+      }
+
+      // Redirect to the filtered URL
+      window.location.href = url;
+    });
+  });
+</script>
