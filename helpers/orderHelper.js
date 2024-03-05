@@ -156,19 +156,34 @@ cancelled: async (data) => {
 
     }
 },
-filterorder: async (low, high)=>{
-  const orders = await Order.find({totalprice: {$gt: low, $lt: high}}).populate('orderid').lean()
+// filterorder: async (low, high)=>{
+//   const orders = await Order.find({totalprice: {$gt: low, $lt: high}}).populate('orderid').lean()
+//   return orders;
+// },
+
+// filterOrderType: async (payType)=>{
+//   const orders = await Order.find({paymentmethod: payType}).populate('orderid').lean()
+//     return orders;
+// },
+// filterOrderStatus: async (status1)=>{
+//   const orders = await Order.find({status: status1}).populate('orderid').lean()
+//     return orders;
+// },
+filterOrders: async (filters) => {
+ const orders =await Order.find(filters).populate('orderid').lean();
   return orders;
 },
-
-filterOrderType: async (payType)=>{
-  const orders = await Order.find({paymentmethod: payType}).populate('orderid').lean()
-    return orders;
-},
-filterOrderStatus: async (status1)=>{
-  const orders = await Order.find({status: status1}).populate('orderid').lean()
-    return orders;
-},
-
-
+totalsum: async ()=>{
+  const result = await Order.aggregate([
+    {
+        $group: {
+            _id: null,
+            totalSum: { $sum: "$totalprice" }
+        }
+    }
+]);
+const totalSum = result.length > 0 ? result[0].totalSum : 0;
+console.log(totalSum);
+return totalSum;
+}
 };

@@ -28,9 +28,9 @@ const {
   updateproduct,
   deleteproduct,
   searchuser,
-  filterType,
-  filterOrder,
-  filterStatus
+  // filterType,
+  filterOrders
+  // filterStatus
 } = require("../controller/admin.js");
 const admin = require("../controller/admin.js");
 
@@ -41,9 +41,9 @@ router.get("/logout", adminlogout);
 router.get("/addproducts",adminAuth, addproducts);
 router.post("/productadded",adminAuth, upload.single("image"), productAdded);
 router.get("/allorders",adminAuth, allorders);
-router.get("/filter", adminAuth, filterOrder);
-router.get("/filter/:paymentMethod", adminAuth, filterType);
-router.get("/filterstatus/:status",adminAuth, filterStatus)
+router.get("/filter", adminAuth, filterOrders);
+// router.get("/filter/:paymentMethod", adminAuth, filterType);
+// router.get("/filterstatus/:status",adminAuth, filterStatus)
 router.get("/product/:id",adminAuth, productdetail);
 router.get("/confirm/:id",adminAuth, confirmorder);
 router.get("/shipped/:id",adminAuth, shiporder);

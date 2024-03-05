@@ -32,8 +32,10 @@ module.exports = {
       res.redirect("/admin/admin");
     }
   },
-  dashboard: (req, res) => {
-    res.render("admin/admin");
+  dashboard:async (req, res) => {
+    const totalsum = await orderH.totalsum();
+    console.log(totalsum);
+    res.render("admin/admin",{totalsum});
   },
   addproducts: (req, res) => {
     res.render("admin/addproducts");
@@ -67,25 +69,58 @@ module.exports = {
 
     res.render("admin/allorders", { orders });
   },
-  filterOrder: async (req, res) => {
-    const lowvalue = req.query.l;
-    const highvalue = req.query.h;
-    const orderfilter = await orderH.filterorder(lowvalue, highvalue);
-    res.render('admin/allorders', { orders: orderfilter })
-  },
-  filterType: async (req, res) => {
-    const payType = req.params.paymentMethod;
-    console.log(payType);
-    const filteredOrderType = await orderH.filterOrderType(payType);
-    res.render("admin/allorders", { orders: filteredOrderType });
-  }, 
-  filterStatus:async(req, res) => {
-    const status1 = req.params.status;
-    console.log("sjhdhjdshhfj",status1);  
+  // filterOrder: async (req, res) => {
+  //   const lowvalue = req.query.l;
+  //   const highvalue = req.query.h;
+  //   const orderfilter = await orderH.filterorder(lowvalue, highvalue);
+  //   res.render('admin/allorders', { orders: orderfilter })
+  // },
+  // filterType: async (req, res) => {
+  //   const payType = req.params.paymentMethod;
+  //   console.log(payType);
+  //   const filteredOrderType = await orderH.filterOrderType(payType);
+  //   res.render("admin/allorders", { orders: filteredOrderType });
+  // }, 
+  // filterStatus:async(req, res) => {
+  //   const status1 = req.params.status;
+  //   console.log("sjhdhjdshhfj",status1);  
 
-    const filteredOrderStatus = await orderH.filterOrderStatus(status1)
-    res.render("admin/allorders", {orders: filteredOrderStatus})
-  },
+  //   const filteredOrderStatus = await orderH.filterOrderStatus(status1)
+  //   res.render("admin/allorders", {orders: filteredOrderStatus})
+  // },
+  filterOrders:  async (req, res) => {
+    try {
+        // Extract filter parameters from request query
+        const { l, h, paymentMethod, status } = req.query;
+
+        // Construct filter object
+        const filters = {};
+
+        if (l && h) {
+            filters.totalprice = { $gte: l, $lte: h };
+        }
+
+        if (paymentMethod) {
+            filters.paymentmethod = paymentMethod;
+        }
+
+        if (status) {
+            filters.status = status;
+        }
+
+        // Find orders based on the filters
+        const orders = await orderH.filterOrders(filters)
+
+        // Render the response
+        res.render('admin/allorders', { orders });
+    } catch (error) {
+        // Handle errors
+        console.error('Error filtering orders:', error);
+        res.status(500).send('Internal Server Error');
+    }
+
+},
+
   productdetail: async (req, res) => {
     const id = req.params.id;
     const productid = await orderH.productdetail(id);
