@@ -172,5 +172,18 @@ cancelled: async (data) => {
 filterOrders: async (filters) => {
  const orders =await Order.find(filters).populate('orderid').lean();
   return orders;
+},
+totalsum: async ()=>{
+  const result = await Order.aggregate([
+    {
+        $group: {
+            _id: null,
+            totalSum: { $sum: "$totalprice" }
+        }
+    }
+]);
+const totalSum = result.length > 0 ? result[0].totalSum : 0;
+console.log(totalSum);
+return totalSum;
 }
 };

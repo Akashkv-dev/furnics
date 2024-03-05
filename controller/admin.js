@@ -32,8 +32,10 @@ module.exports = {
       res.redirect("/admin/admin");
     }
   },
-  dashboard: (req, res) => {
-    res.render("admin/admin");
+  dashboard:async (req, res) => {
+    const totalsum = await orderH.totalsum();
+    console.log(totalsum);
+    res.render("admin/admin",{totalsum});
   },
   addproducts: (req, res) => {
     res.render("admin/addproducts");
