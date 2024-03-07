@@ -183,7 +183,89 @@ totalsum: async ()=>{
     }
 ]);
 const totalSum = result.length > 0 ? result[0].totalSum : 0;
-console.log(totalSum);
 return totalSum;
+},
+monthlysum: async (thirtyDaysAgo)=>{
+  const result = await Order.aggregate([
+    {
+        $match: {
+            orderdate: { $gte: thirtyDaysAgo }
+        }
+    },
+    {
+        $group: {
+            _id: null,
+            totalSum: { $sum: "$totalprice" }
+        }
+    }
+]);
+const sum = result.length > 0 ? result[0].totalSum : 0;
+return sum;
+},
+totalOD:async ()=>{
+  const result = await Order.aggregate([
+    {
+        $group: {
+            _id: null,
+            totalOrders: { $sum: 1 }
+        }
+    }
+]);
+const totalOrders = result.length > 0 ? result[0].totalOrders : 0;
+return totalOrders;
+},
+deliveredOD:async ()=>{
+  const result =await Order.aggregate([
+    {
+      $match:{
+        status: "Delivered"
+      }
+    },
+    {
+      $group:{
+        _id:null,
+        count:{$sum: 1 }
+      }
+    }
+    
+  ]);
+  const deliveredOD = result.length > 0 ? result[0].count : 0;
+  return deliveredOD;
+},
+placedOD:async ()=>{
+  const result =await Order.aggregate([
+    {
+      $match:{
+        status:"placed"
+      }
+    },
+      {
+        $group:{
+          _id:null,
+          count:{$sum:1}
+        }
+      }
+    
+  ])
+  const placedOD = result.length > 0 ? result[0].count : 0;
+  return placedOD
+},
+cancelledOD:async()=>{
+  const result = await Order.aggregate([
+    {
+      $match:{
+        status:"Cancelled"
+      }
+    },
+    {
+      $group:{
+        _id:null,
+        count:{$sum:1}
+      }
+    }
+  ])
+  const cancelledOD = result.length > 0 ? result[0].count : 0;
+  return cancelledOD;
+
 }
 };

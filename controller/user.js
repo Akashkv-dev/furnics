@@ -260,7 +260,6 @@ module.exports = {
             productname: Product.productname,
           });
         }
-        console.log("withoutuser", req.session.cart);
         logger.log("withoutuser", req.session.cart);
       }
 
