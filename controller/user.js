@@ -14,6 +14,7 @@ const { request } = require("express");
 const otp = require("../config/otp");
 const { sentOTP } = require("../config/phoneOtp");
 const { verify } = require("crypto");
+const { stopCoverage } = require("v8");
 
 module.exports = {
   loginpage: (req, res) => {
@@ -179,6 +180,7 @@ module.exports = {
   },
   viewcart: async (req, res) => {
     let isUser = req.session.loggedIn || false;
+    const user =req.session.loggedIn
     let userid = req.session.userId || null;
     let cartItems = [];
 
@@ -199,19 +201,20 @@ module.exports = {
       let cartcount = cartItems.length;
       let sum1 = cartItems.reduce((sum, item) => sum + item.price, 0);
       let totalSum = sum1 + 5;
-      let stock =true;
-      cartItems.forEach((item)=>{
-        if(item.productId.quantity === 0){
+      let stock = true;
+      cartItems.forEach((item) => {
+        if (item.productId.quantity === 0) {
           stock = false;
         }
-      })
+      });
       res.render("users/cart", {
         cartItems,
         totalSum,
         cartcount,
         sum1,
         isUser,
-        stock
+        stock,
+        user
       });
     } catch (error) {
       console.error("Error rendering cart page:", error);
@@ -222,7 +225,7 @@ module.exports = {
   addTocart: async (req, res) => {
     const Productid = req.params.id;
     const Product = await productH.findItem(Productid);
-    const stock = Product.quantity
+    const stock = Product.quantity;
     if (!Product) {
       return res.status(404).send("Product not found");
     }
@@ -239,7 +242,22 @@ module.exports = {
           quantity: 1,
           price: Price,
         };
-        await userH.pushTOcart(arrayItems, userid ,stock);
+        await userH.pushTOcart(arrayItems, userid, stock);
+        try {
+          const user = await userH.findProduct(userid);
+          let cartcount = 0;
+          if (user && user.cart && user.cart.cart) {
+            cartcount = user.cart.cart.length;
+          }
+
+          // Send the updated cart count along with the response
+          res.json({ success: true, message: "Item added to cart", cartcount });
+        } catch (error) {
+          console.error("Error adding item to cart:", error);
+          res
+            .status(500)
+            .json({ success: false, message: "Failed to add item to cart" });
+        }
       } else {
         // If user is not logged in, add product to the session cart
         if (!req.session.cart) {
@@ -259,11 +277,25 @@ module.exports = {
             image: Product.image,
             productname: Product.productname,
           });
+          try {
+            let cartcount = 0;
+            if (req.session.cart) {
+              cartcount = req.session.cart.length;
+            }
+  
+            // Send the updated cart count along with the response
+            res.json({ success: true, message: "Item added to cart", cartcount });
+          } catch (error) {
+            console.error("Error adding item to cart:", error);
+            res
+              .status(500)
+              .json({ success: false, message: "Failed to add item to cart" });
+          }
         }
         logger.log("withoutuser", req.session.cart);
       }
 
-      res.redirect("/");
+      // res.redirect("/");
     } catch (error) {
       console.error(error);
       res.status(500).send("Internal Server Error");
@@ -543,5 +575,14 @@ module.exports = {
     } catch (error) {
       console.log("error in remove coupon", error);
     }
+  },
+  getCartCount: async (req, res) => {
+    const userId = req.session.userId;
+    const user = await userH.findProduct(userId);
+    let cartCount = 0;
+    if (user && user.cart && user.cart.cart) {
+      cartCount = user.cart.cart.length;
+    }
+    res.json({ cartCount });
   },
 };

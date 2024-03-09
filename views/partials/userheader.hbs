@@ -1,21 +1,21 @@
 <style>
     .cart-icon-container {
-    position: relative;
-    display: inline-block;
-}
+        position: relative;
+        display: inline-block;
+    }
 
-.cart-badge {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background-color: red;
-    color: white;
-    border-radius: 50%;
-    padding: 0px 5px;
-    font-size: 11px;
-}
-
+    .cart-badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background-color: red;
+        color: white;
+        border-radius: 50%;
+        padding: 0px 5px;
+        font-size: 11px;
+    }
 </style>
+
 <body class="bg-body" data-bs-spy="scroll" data-bs-target="#navbar" data-bs-root-margin="0px 0px -40%"
     data-bs-smooth-scroll="true" tabindex="0">
 
@@ -210,8 +210,9 @@
                                                 <svg class="cart" width="18" height="18">
                                                     <use xlink:href="#cart"></use>
                                                 </svg>
-                                                <span class="cart-badge">{{cartcount}}</span>
+                                                <span class="cart-badge" id="cart-badge">{{cartcount}}</span>
                                             </a>
+
                                         </li>
                                     </ul>
                                 </div>
@@ -243,4 +244,5 @@
             }
         });
     </script>
+   
 </body>

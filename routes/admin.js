@@ -29,7 +29,10 @@ const {
   deleteproduct,
   searchuser,
   // filterType,
-  filterOrders
+  filterOrders,
+  banner,
+  addbanner,
+  allbanners
   // filterStatus
 } = require("../controller/admin.js");
 const admin = require("../controller/admin.js");
@@ -64,5 +67,10 @@ router.get("/deleteproduct/:id",adminAuth,deleteproduct)
 //coupon
 router.get("/coupon",adminAuth, coupon);
 router.post("/addcoupon",adminAuth, addCoupon);
+
+//banner
+router.get("/banner",adminAuth,banner);
+router.post("/addbanners",adminAuth,upload.single("bannerImage"),addbanner)
+router.get("/allbanners",adminAuth,allbanners)
 
 module.exports = router;

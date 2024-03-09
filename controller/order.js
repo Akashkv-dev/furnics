@@ -25,9 +25,7 @@ module.exports = {
         totalPay = cartProduct.totalPrice + 5;
       }
       if(user.coupon == "applied" && cartProduct.totalPrice >=10000){
-        console.log("coupon",coupon.couponCode);
         totalPay = totalPay - disprice
-        console.log("garnd total",totalPay);
         res.render("users/checkout", {
           cart: cartProduct.cart.cart,
           totalPrice: cartProduct.totalPrice,
@@ -59,12 +57,10 @@ module.exports = {
     const userid = req.session.userId;
     const user = await userH.findProduct(userid);
     const Cart = user.cart.cart;
-    console.log(req.body);
     const timestamp = Date.now();
     const randomNum = Math.floor(Math.random() * 1000);
     const orderId = `ORD-${timestamp}-${randomNum}`;
     const price = req.body.price
-    console.log("ajaxprice",price);
 
     try {
       if (user) {
@@ -134,7 +130,6 @@ module.exports = {
     const hash = crypto.createHmac("sha256", process.env.key_secret);
     hash.update(orderId + "|" + paymentId);
     const digest = hash.digest("hex");
-    console.log("digest", digest);
 
     if (digest === signature) {
       console.log("payment successful");
@@ -143,7 +138,6 @@ module.exports = {
       orderH.deleteCartorderd(userid);
       res.json("success");
     } else {
-      console.log("payment failed");
       res.json("failed");
     }
   },

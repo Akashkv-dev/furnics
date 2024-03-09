@@ -2,6 +2,7 @@ const product=require('../modals/Products')
 const Admin = require("../modals/Admin")
 const Coupon = require("../modals/Coupon")
 const User = require("../modals/User")
+const Banner = require("../modals/Banner")
 
 module.exports ={
     findAdmin:async (email)=>{
@@ -25,6 +26,13 @@ module.exports ={
       },
       unblockuser: async (data) => {
         await User.updateOne({ _id: data }, { $unset: { status: 1 } });
+    },
+    insertBanner:async (data)=>{
+        await Banner.insertMany(data)
+    },
+    allbanners:async ()=>{
+        const result = await Banner.find().lean()
+        return result
     }
     
 }

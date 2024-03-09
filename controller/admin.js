@@ -287,4 +287,23 @@ module.exports = {
       console.error("Error while adding coupon:", error);
     }
   },
+  banner:(req,res) => {
+    res.render("admin/banner")
+  },
+  addbanner:async(req,res) => {
+    const {title,description} = req.body
+    const Image = (req.body.bannerImage = path.basename(req.file.filename));
+    const data={
+      bannerImage:Image,
+      bannerTitle:title,
+      bannerDescription:description
+    }
+    await adminH.insertBanner(data)
+   
+    res.redirect("/admin/banner")
+  },
+  allbanners:async (req,res)=>{
+    const banner=await adminH.allbanners()
+    res.render("admin/allbanner",{banner})
+  }
 };
