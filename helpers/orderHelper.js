@@ -267,5 +267,50 @@ cancelledOD:async()=>{
   const cancelledOD = result.length > 0 ? result[0].count : 0;
   return cancelledOD;
 
+},
+monthtotal: async () => {
+  try {
+    const result = await Order.aggregate ([
+      {
+        $group: {
+          _id: {
+            year: { $year: "$orderdate" },
+            month: { $month: "$orderdate" }
+          },
+          totalMonthlyPrice: { $sum: "$totalprice" }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          year: "$_id.year",
+          month: "$_id.month",
+          totalMonthlyPrice: 1
+        }
+      },
+      {
+        $sort: {
+          year: 1,
+          month: 1
+        }
+      }
+    ]);
+
+
+    // Create an array of all months (1-12)
+    const allMonths = [...Array(12).keys()].map(month => month + 1);
+
+    // Create an array to hold the final result
+    const finalResult = allMonths.map(month => {
+      const monthData = result.find(item => item.month === month);
+      return monthData ? monthData : { month, totalMonthlyPrice: 0 };
+    });
+
+    return finalResult;
+  } catch (error) {
+    console.error("Error occurred while fetching month totals:", error);
+    throw error;
+  }
 }
+
 };
