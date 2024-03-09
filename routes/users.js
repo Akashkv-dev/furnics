@@ -24,7 +24,8 @@ const {
   wishlist,
   deleteWishlist,
   applyCoupon,
-  removeCoupon
+  removeCoupon,
+  getCartCount
 } = require("../controller/user");
 const {
   checkOut,

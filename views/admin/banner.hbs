@@ -1,0 +1,39 @@
+{{> adminheader}}
+<div class="container-fluid">
+    <div class="content-wrapper">
+        <div class="container-xxl flex-grow-1 container-p-y">
+            <h4 class="py-3 mb-4">Add Banner</h4>
+            <div class="row">
+                <div class="col-md-6 offset-md-3">
+                    <div class="card">
+                        <!-- Card Content -->
+                        <div class="card-body">
+                            <form action="/admin/addbanners" method="post" enctype="multipart/form-data">
+                                <!-- Banner Image -->
+                                <div class="form-group mb-3">
+                                    <label for="bannerImage">Banner Image</label>
+                                    <input type="file" id="bannerImage" name="bannerImage" class="form-control-file" required>
+                                </div>
+                                <!-- Banner Title -->
+                                <div class="form-group mb-3">
+                                    <label for="bannerTitle">Banner Title</label>
+                                    <input type="text" id="bannerTitle" name="title" class="form-control" placeholder="Enter title for the banner" required>
+                                </div>
+                                <!-- Banner Description -->
+                                <div class="form-group mb-3">
+                                    <label for="bannerDescription">Banner Description</label>
+                                    <textarea id="bannerDescription" name="description" class="form-control" rows="5" placeholder="Enter description for the banner" required></textarea>
+                                </div>
+                                <!-- Submit Button -->
+                                <div class="form-group mb-0">
+                                    <button type="submit" class="btn btn-primary btn-block text-uppercase">Add Banner</button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /Card Content -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

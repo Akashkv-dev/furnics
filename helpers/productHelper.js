@@ -1,6 +1,10 @@
 const product = require("../modals/Products");
 
 module.exports = {
+  prodata:async ()=>{
+    const result =await product.find({}).lean().limit(6);
+    return result
+  },
   allproducts: async (data) => {
     var result = await product.find(data).lean();
     return result;
