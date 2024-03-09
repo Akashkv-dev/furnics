@@ -1,9 +1,23 @@
-
-
 {{> userheader}}
+<style>
+    .container-fluid {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .row {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .col-md-12 {
+        padding-left: 0;
+        padding-right: 0;
+    }
+</style>
 
 <div class="row">
-    
+
     {{#each prodata}}
     <div class="col-md-3">
         <div class="product-card image-zoom-effect link-effect d-flex flex-wrap">
@@ -17,12 +31,44 @@
                     <a href="/users/productview/{{this._id}}" class="text-primary">{{this.productname}}</a>
                 </h3>
                 <div class="cart-info">
-                    <a class="pseudo-text-effect" href="/users/addtocart/{{this._id}}" data-after="ADD TO CART"><span>₹{{this.price}}</span></a>
+                    <a class="pseudo-text-effect" href="#" onclick="addToCart('{{this._id}}', '{{this.price}}')"
+                        data-after="ADD TO CART">
+                        <span>₹{{this.price}}</span>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
     {{/each}}
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script>
+    function addToCart(productId, price) {
+        Swal.fire({
+            title: 'Confirmation',
+            text: 'Item added to cart',
+            icon: 'success',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'OK'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // You can perform the add to cart action here, for example, redirect to the add to cart URL
+                $.ajax({
+                    type: 'GET',
+                    url: `/users/addtocart/${productId}`,
+                    success: function (response) {
+                        console.log(response)
+                        // Update cart badge dynamically
+                        $('#cart-badge').text(response.cartcount);
+                    },
+                    error: function (err) {
+                        console.error('Error adding to cart:', err);
+                    }
+                });
+            }
+        });
+    }
+</script>
 
 {{> userfooter}}
