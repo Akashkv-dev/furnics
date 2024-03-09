@@ -39,14 +39,26 @@ module.exports = {
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
     const monthlysum = await orderH.monthlysum(thirtyDaysAgo);
     // success orders
-    const totalOD =await orderH.totalOD()
-    const deliveredOD =await orderH.deliveredOD()
-    const placedOD =await orderH.placedOD()
-    const cancelledOD=await orderH.cancelledOD()
-    const percentDelivered =Math.floor((deliveredOD * 100)/totalOD)
-    const percentPlaced =Math.floor((placedOD * 100)/totalOD)
-    const percentCancelled =Math.floor((cancelledOD * 100)/totalOD)
-    res.render("admin/admin", { totalsum,monthlysum,percentDelivered,percentPlaced,percentCancelled });
+    const totalOD = await orderH.totalOD();
+    const deliveredOD = await orderH.deliveredOD();
+    const placedOD = await orderH.placedOD();
+    const cancelledOD = await orderH.cancelledOD();
+    const percentDelivered = Math.floor((deliveredOD * 100) / totalOD);
+    const percentPlaced = Math.floor((placedOD * 100) / totalOD);
+    const percentCancelled = Math.floor((cancelledOD * 100) / totalOD);
+    //areachart
+    const monthtotal = await orderH.monthtotal();
+    const totalPrices = monthtotal.map((month) => month.totalMonthlyPrice);
+    console.log(totalPrices);
+    const jsontotal= JSON.stringify(totalPrices)
+    res.render("admin/admin", {
+      totalsum,
+      monthlysum,
+      percentDelivered,
+      percentPlaced,
+      percentCancelled,
+      jsontotal,
+    });
   },
   addproducts: (req, res) => {
     res.render("admin/addproducts");
@@ -287,23 +299,23 @@ module.exports = {
       console.error("Error while adding coupon:", error);
     }
   },
-  banner:(req,res) => {
-    res.render("admin/banner")
+  banner: (req, res) => {
+    res.render("admin/banner");
   },
-  addbanner:async(req,res) => {
-    const {title,description} = req.body
+  addbanner: async (req, res) => {
+    const { title, description } = req.body;
     const Image = (req.body.bannerImage = path.basename(req.file.filename));
-    const data={
-      bannerImage:Image,
-      bannerTitle:title,
-      bannerDescription:description
-    }
-    await adminH.insertBanner(data)
-   
-    res.redirect("/admin/banner")
+    const data = {
+      bannerImage: Image,
+      bannerTitle: title,
+      bannerDescription: description,
+    };
+    await adminH.insertBanner(data);
+
+    res.redirect("/admin/banner");
   },
-  allbanners:async (req,res)=>{
-    const banner=await adminH.allbanners()
-    res.render("admin/allbanner",{banner})
-  }
+  allbanners: async (req, res) => {
+    const banner = await adminH.allbanners();
+    res.render("admin/allbanner", { banner });
+  },
 };
