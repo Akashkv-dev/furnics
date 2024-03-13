@@ -4,7 +4,6 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const verifySid = process.env.VERIFY_SID;
 const client = require("twilio")(accountSid, authToken);
-const logger = require("../util/winston");
 
 const userH = require("../helpers/userHelper");
 const productH = require("../helpers/productHelper");
@@ -292,7 +291,6 @@ module.exports = {
               .json({ success: false, message: "Failed to add item to cart" });
           }
         }
-        logger.log("withoutuser", req.session.cart);
       }
 
       // res.redirect("/");
